@@ -16,6 +16,13 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
+      <script>
+        function sortear(id,amigo){
+            alert(id);
+            alert('Atenção você é: ' + amigo + '? Tem certeza ? Olhe lá hein !!');
+        }
+    </script>
   </head>
   <body>
       <div role="main" class="container theme-showcase">
@@ -37,7 +44,7 @@
                   <?php }  ?>
               </div>
                 <div style="text-align: center">
-                    <button class="btn btn-sm btn-success" type="button">Sortear Amigo Oculto</button>
+                    <button class="btn btn-sm btn-success" type="button" onclick="sortear(<?php echo $amigo->getId(); ?>,'<?php echo $amigo->getNome(); ?>')">Sortear Amigo Oculto</button>
                     <br>
                     <br>
                     <button class="btn btn-sm btn-primary" type="button">Cadastrar Presente</button>
@@ -53,5 +60,7 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!-- Latest compiled and minified JavaScript -->
     <script src="/js/bootstrap.min.js"></script>
+    
+  
   </body>
 </html>
