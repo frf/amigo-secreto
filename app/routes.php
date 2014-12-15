@@ -10,11 +10,4 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-
-Route::get('/', function()
-{
-    var_dump(Base\AmigoQuery::create()->find());
-        #$produto = ImovelQuery::create()->find();
-        #var_dump($produto);
-	return View::make('hello');
-});
+Route::get('/', 'HomeController@showWelcome');

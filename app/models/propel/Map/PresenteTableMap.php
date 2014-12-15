@@ -9,6 +9,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\DataFetcher\DataFetcherInterface;
+use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
@@ -39,7 +40,7 @@ class PresenteTableMap extends TableMap
     /**
      * The default database name for this class
      */
-    const DATABASE_NAME = 'oimovel';
+    const DATABASE_NAME = 'amigosecreto';
 
     /**
      * The table name for this class
@@ -59,7 +60,7 @@ class PresenteTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 0;
 
     /**
      * The number of lazy-loaded columns
@@ -69,22 +70,7 @@ class PresenteTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
-
-    /**
-     * the column name for the id_usuario field
-     */
-    const COL_ID_USUARIO = 'presente.id_usuario';
-
-    /**
-     * the column name for the nome field
-     */
-    const COL_NOME = 'presente.nome';
-
-    /**
-     * the column name for the id field
-     */
-    const COL_ID = 'presente.id';
+    const NUM_HYDRATE_COLUMNS = 0;
 
     /**
      * The default string format for model objects of the related table
@@ -98,11 +84,11 @@ class PresenteTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('IdUsuario', 'Nome', 'Id', ),
-        self::TYPE_CAMELNAME     => array('idUsuario', 'nome', 'id', ),
-        self::TYPE_COLNAME       => array(PresenteTableMap::COL_ID_USUARIO, PresenteTableMap::COL_NOME, PresenteTableMap::COL_ID, ),
-        self::TYPE_FIELDNAME     => array('id_usuario', 'nome', 'id', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array(),
+        self::TYPE_CAMELNAME     => array(),
+        self::TYPE_COLNAME       => array(),
+        self::TYPE_FIELDNAME     => array(),
+        self::TYPE_NUM           => array()
     );
 
     /**
@@ -112,11 +98,11 @@ class PresenteTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('IdUsuario' => 0, 'Nome' => 1, 'Id' => 2, ),
-        self::TYPE_CAMELNAME     => array('idUsuario' => 0, 'nome' => 1, 'id' => 2, ),
-        self::TYPE_COLNAME       => array(PresenteTableMap::COL_ID_USUARIO => 0, PresenteTableMap::COL_NOME => 1, PresenteTableMap::COL_ID => 2, ),
-        self::TYPE_FIELDNAME     => array('id_usuario' => 0, 'nome' => 1, 'id' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array(),
+        self::TYPE_CAMELNAME     => array(),
+        self::TYPE_COLNAME       => array(),
+        self::TYPE_FIELDNAME     => array(),
+        self::TYPE_NUM           => array()
     );
 
     /**
@@ -134,12 +120,8 @@ class PresenteTableMap extends TableMap
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Presente');
         $this->setPackage('');
-        $this->setUseIdGenerator(true);
-        $this->setPrimaryKeyMethodInfo('presente_id_seq');
+        $this->setUseIdGenerator(false);
         // columns
-        $this->addForeignKey('id_usuario', 'IdUsuario', 'INTEGER', 'amigo', 'id', false, null, null);
-        $this->addColumn('nome', 'Nome', 'LONGVARCHAR', false, null, null);
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -147,7 +129,6 @@ class PresenteTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Amigo', '\\Amigo', RelationMap::MANY_TO_ONE, array('id_usuario' => 'id', ), null, null);
     } // buildRelations()
 
     /**
@@ -165,12 +146,7 @@ class PresenteTableMap extends TableMap
      */
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 2 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
-            return null;
-        }
-
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 2 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return null;
     }
 
     /**
@@ -187,11 +163,7 @@ class PresenteTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return (int) $row[
-            $indexType == TableMap::TYPE_NUM
-                ? 2 + $offset
-                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
-        ];
+        return '';
     }
 
     /**
@@ -291,13 +263,7 @@ class PresenteTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(PresenteTableMap::COL_ID_USUARIO);
-            $criteria->addSelectColumn(PresenteTableMap::COL_NOME);
-            $criteria->addSelectColumn(PresenteTableMap::COL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.id_usuario');
-            $criteria->addSelectColumn($alias . '.nome');
-            $criteria->addSelectColumn($alias . '.id');
         }
     }
 
@@ -345,11 +311,10 @@ class PresenteTableMap extends TableMap
             // rename for clarity
             $criteria = $values;
         } elseif ($values instanceof \Presente) { // it's a model object
-            // create criteria based on pk values
-            $criteria = $values->buildPkeyCriteria();
+            // create criteria based on pk value
+            $criteria = $values->buildCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(PresenteTableMap::DATABASE_NAME);
-            $criteria->add(PresenteTableMap::COL_ID, (array) $values, Criteria::IN);
+            throw new LogicException('The Presente object has no primary key');
         }
 
         $query = PresenteQuery::create()->mergeWith($criteria);
@@ -395,10 +360,6 @@ class PresenteTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from Presente object
-        }
-
-        if ($criteria->containsKey(PresenteTableMap::COL_ID) && $criteria->keyContainsValue(PresenteTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PresenteTableMap::COL_ID.')');
         }
 
 

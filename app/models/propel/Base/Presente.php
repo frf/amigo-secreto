@@ -2,11 +2,8 @@
 
 namespace Base;
 
-use \Amigo as ChildAmigo;
-use \AmigoQuery as ChildAmigoQuery;
 use \PresenteQuery as ChildPresenteQuery;
 use \Exception;
-use \PDO;
 use Map\PresenteTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -60,29 +57,6 @@ abstract class Presente implements ActiveRecordInterface
      * @var array
      */
     protected $virtualColumns = array();
-
-    /**
-     * The value for the id_usuario field.
-     * @var        int
-     */
-    protected $id_usuario;
-
-    /**
-     * The value for the nome field.
-     * @var        string
-     */
-    protected $nome;
-
-    /**
-     * The value for the id field.
-     * @var        int
-     */
-    protected $id;
-
-    /**
-     * @var        ChildAmigo
-     */
-    protected $aAmigo;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -310,100 +284,6 @@ abstract class Presente implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id_usuario] column value.
-     *
-     * @return int
-     */
-    public function getIdUsuario()
-    {
-        return $this->id_usuario;
-    }
-
-    /**
-     * Get the [nome] column value.
-     *
-     * @return string
-     */
-    public function getNome()
-    {
-        return $this->nome;
-    }
-
-    /**
-     * Get the [id] column value.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the value of [id_usuario] column.
-     *
-     * @param  int $v new value
-     * @return $this|\Presente The current object (for fluent API support)
-     */
-    public function setIdUsuario($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_usuario !== $v) {
-            $this->id_usuario = $v;
-            $this->modifiedColumns[PresenteTableMap::COL_ID_USUARIO] = true;
-        }
-
-        if ($this->aAmigo !== null && $this->aAmigo->getId() !== $v) {
-            $this->aAmigo = null;
-        }
-
-        return $this;
-    } // setIdUsuario()
-
-    /**
-     * Set the value of [nome] column.
-     *
-     * @param  string $v new value
-     * @return $this|\Presente The current object (for fluent API support)
-     */
-    public function setNome($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->nome !== $v) {
-            $this->nome = $v;
-            $this->modifiedColumns[PresenteTableMap::COL_NOME] = true;
-        }
-
-        return $this;
-    } // setNome()
-
-    /**
-     * Set the value of [id] column.
-     *
-     * @param  int $v new value
-     * @return $this|\Presente The current object (for fluent API support)
-     */
-    public function setId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id !== $v) {
-            $this->id = $v;
-            $this->modifiedColumns[PresenteTableMap::COL_ID] = true;
-        }
-
-        return $this;
-    } // setId()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -438,15 +318,6 @@ abstract class Presente implements ActiveRecordInterface
     public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
     {
         try {
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PresenteTableMap::translateFieldName('IdUsuario', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id_usuario = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PresenteTableMap::translateFieldName('Nome', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->nome = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PresenteTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -455,7 +326,7 @@ abstract class Presente implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = PresenteTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 0; // 0 = PresenteTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Presente'), 0, $e);
@@ -477,9 +348,6 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aAmigo !== null && $this->id_usuario !== $this->aAmigo->getId()) {
-            $this->aAmigo = null;
-        }
     } // ensureConsistency
 
     /**
@@ -519,7 +387,6 @@ abstract class Presente implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aAmigo = null;
         } // if (deep)
     }
 
@@ -619,18 +486,6 @@ abstract class Presente implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aAmigo !== null) {
-                if ($this->aAmigo->isModified() || $this->aAmigo->isNew()) {
-                    $affectedRows += $this->aAmigo->save($con);
-                }
-                $this->setAmigo($this->aAmigo);
-            }
-
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -662,30 +517,8 @@ abstract class Presente implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[PresenteTableMap::COL_ID] = true;
-        if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . PresenteTableMap::COL_ID . ')');
-        }
-        if (null === $this->id) {
-            try {
-                $dataFetcher = $con->query("SELECT nextval('presente_id_seq')");
-                $this->id = $dataFetcher->fetchColumn();
-            } catch (Exception $e) {
-                throw new PropelException('Unable to get sequence id.', 0, $e);
-            }
-        }
-
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(PresenteTableMap::COL_ID_USUARIO)) {
-            $modifiedColumns[':p' . $index++]  = 'id_usuario';
-        }
-        if ($this->isColumnModified(PresenteTableMap::COL_NOME)) {
-            $modifiedColumns[':p' . $index++]  = 'nome';
-        }
-        if ($this->isColumnModified(PresenteTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'id';
-        }
 
         $sql = sprintf(
             'INSERT INTO presente (%s) VALUES (%s)',
@@ -697,15 +530,6 @@ abstract class Presente implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id_usuario':
-                        $stmt->bindValue($identifier, $this->id_usuario, PDO::PARAM_INT);
-                        break;
-                    case 'nome':
-                        $stmt->bindValue($identifier, $this->nome, PDO::PARAM_STR);
-                        break;
-                    case 'id':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
                 }
             }
             $stmt->execute();
@@ -761,15 +585,6 @@ abstract class Presente implements ActiveRecordInterface
     public function getByPosition($pos)
     {
         switch ($pos) {
-            case 0:
-                return $this->getIdUsuario();
-                break;
-            case 1:
-                return $this->getNome();
-                break;
-            case 2:
-                return $this->getId();
-                break;
             default:
                 return null;
                 break;
@@ -787,11 +602,10 @@ abstract class Presente implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
-     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
     {
 
         if (isset($alreadyDumpedObjects['Presente'][$this->hashCode()])) {
@@ -800,32 +614,12 @@ abstract class Presente implements ActiveRecordInterface
         $alreadyDumpedObjects['Presente'][$this->hashCode()] = true;
         $keys = PresenteTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getIdUsuario(),
-            $keys[1] => $this->getNome(),
-            $keys[2] => $this->getId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
-        if ($includeForeignObjects) {
-            if (null !== $this->aAmigo) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'amigo';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'amigo';
-                        break;
-                    default:
-                        $key = 'Amigo';
-                }
-
-                $result[$key] = $this->aAmigo->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-        }
 
         return $result;
     }
@@ -859,15 +653,6 @@ abstract class Presente implements ActiveRecordInterface
     public function setByPosition($pos, $value)
     {
         switch ($pos) {
-            case 0:
-                $this->setIdUsuario($value);
-                break;
-            case 1:
-                $this->setNome($value);
-                break;
-            case 2:
-                $this->setId($value);
-                break;
         } // switch()
 
         return $this;
@@ -894,15 +679,6 @@ abstract class Presente implements ActiveRecordInterface
     {
         $keys = PresenteTableMap::getFieldNames($keyType);
 
-        if (array_key_exists($keys[0], $arr)) {
-            $this->setIdUsuario($arr[$keys[0]]);
-        }
-        if (array_key_exists($keys[1], $arr)) {
-            $this->setNome($arr[$keys[1]]);
-        }
-        if (array_key_exists($keys[2], $arr)) {
-            $this->setId($arr[$keys[2]]);
-        }
     }
 
      /**
@@ -944,15 +720,6 @@ abstract class Presente implements ActiveRecordInterface
     {
         $criteria = new Criteria(PresenteTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(PresenteTableMap::COL_ID_USUARIO)) {
-            $criteria->add(PresenteTableMap::COL_ID_USUARIO, $this->id_usuario);
-        }
-        if ($this->isColumnModified(PresenteTableMap::COL_NOME)) {
-            $criteria->add(PresenteTableMap::COL_NOME, $this->nome);
-        }
-        if ($this->isColumnModified(PresenteTableMap::COL_ID)) {
-            $criteria->add(PresenteTableMap::COL_ID, $this->id);
-        }
 
         return $criteria;
     }
@@ -969,8 +736,7 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildPresenteQuery::create();
-        $criteria->add(PresenteTableMap::COL_ID, $this->id);
+        throw new LogicException('The Presente object has no primary key');
 
         return $criteria;
     }
@@ -983,7 +749,7 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getId();
+        $validPk = false;
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -998,23 +764,27 @@ abstract class Presente implements ActiveRecordInterface
     }
 
     /**
-     * Returns the primary key for this object (row).
-     * @return int
+     * Returns NULL since this table doesn't have a primary key.
+     * This method exists only for BC and is deprecated!
+     * @return null
      */
     public function getPrimaryKey()
     {
-        return $this->getId();
+        return null;
     }
 
     /**
-     * Generic method to set the primary key (id column).
+     * Dummy primary key setter.
      *
-     * @param       int $key Primary key.
-     * @return void
+     * This function only exists to preserve backwards compatibility.  It is no longer
+     * needed or required by the Persistent interface.  It will be removed in next BC-breaking
+     * release of Propel.
+     *
+     * @deprecated
      */
-    public function setPrimaryKey($key)
+    public function setPrimaryKey($pk)
     {
-        $this->setId($key);
+        // do nothing, because this object doesn't have any primary keys
     }
 
     /**
@@ -1023,7 +793,7 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getId();
+        return ;
     }
 
     /**
@@ -1039,11 +809,8 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setIdUsuario($this->getIdUsuario());
-        $copyObj->setNome($this->getNome());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1070,69 +837,12 @@ abstract class Presente implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildAmigo object.
-     *
-     * @param  ChildAmigo $v
-     * @return $this|\Presente The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setAmigo(ChildAmigo $v = null)
-    {
-        if ($v === null) {
-            $this->setIdUsuario(NULL);
-        } else {
-            $this->setIdUsuario($v->getId());
-        }
-
-        $this->aAmigo = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildAmigo object, it will not be re-added.
-        if ($v !== null) {
-            $v->addPresente($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildAmigo object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildAmigo The associated ChildAmigo object.
-     * @throws PropelException
-     */
-    public function getAmigo(ConnectionInterface $con = null)
-    {
-        if ($this->aAmigo === null && ($this->id_usuario !== null)) {
-            $this->aAmigo = ChildAmigoQuery::create()->findPk($this->id_usuario, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aAmigo->addPresentes($this);
-             */
-        }
-
-        return $this->aAmigo;
-    }
-
-    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
-        if (null !== $this->aAmigo) {
-            $this->aAmigo->removePresente($this);
-        }
-        $this->id_usuario = null;
-        $this->nome = null;
-        $this->id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1153,7 +863,6 @@ abstract class Presente implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
-        $this->aAmigo = null;
     }
 
     /**

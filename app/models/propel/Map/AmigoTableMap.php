@@ -39,7 +39,7 @@ class AmigoTableMap extends TableMap
     /**
      * The default database name for this class
      */
-    const DATABASE_NAME = 'oimovel';
+    const DATABASE_NAME = 'amigosecreto';
 
     /**
      * The table name for this class
@@ -72,19 +72,9 @@ class AmigoTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 5;
 
     /**
-     * the column name for the data field
+     * the column name for the id field
      */
-    const COL_DATA = 'amigo.data';
-
-    /**
-     * the column name for the id_sorteou field
-     */
-    const COL_ID_SORTEOU = 'amigo.id_sorteou';
-
-    /**
-     * the column name for the sorteado field
-     */
-    const COL_SORTEADO = 'amigo.sorteado';
+    const COL_ID = 'amigo.id';
 
     /**
      * the column name for the nome field
@@ -92,9 +82,19 @@ class AmigoTableMap extends TableMap
     const COL_NOME = 'amigo.nome';
 
     /**
-     * the column name for the id field
+     * the column name for the id_sorteado field
      */
-    const COL_ID = 'amigo.id';
+    const COL_ID_SORTEADO = 'amigo.id_sorteado';
+
+    /**
+     * the column name for the dt_sorteio field
+     */
+    const COL_DT_SORTEIO = 'amigo.dt_sorteio';
+
+    /**
+     * the column name for the foto field
+     */
+    const COL_FOTO = 'amigo.foto';
 
     /**
      * The default string format for model objects of the related table
@@ -108,10 +108,10 @@ class AmigoTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Data', 'IdSorteou', 'Sorteado', 'Nome', 'Id', ),
-        self::TYPE_CAMELNAME     => array('data', 'idSorteou', 'sorteado', 'nome', 'id', ),
-        self::TYPE_COLNAME       => array(AmigoTableMap::COL_DATA, AmigoTableMap::COL_ID_SORTEOU, AmigoTableMap::COL_SORTEADO, AmigoTableMap::COL_NOME, AmigoTableMap::COL_ID, ),
-        self::TYPE_FIELDNAME     => array('data', 'id_sorteou', 'sorteado', 'nome', 'id', ),
+        self::TYPE_PHPNAME       => array('Id', 'Nome', 'IdSorteado', 'DtSorteio', 'Foto', ),
+        self::TYPE_CAMELNAME     => array('id', 'nome', 'idSorteado', 'dtSorteio', 'foto', ),
+        self::TYPE_COLNAME       => array(AmigoTableMap::COL_ID, AmigoTableMap::COL_NOME, AmigoTableMap::COL_ID_SORTEADO, AmigoTableMap::COL_DT_SORTEIO, AmigoTableMap::COL_FOTO, ),
+        self::TYPE_FIELDNAME     => array('id', 'nome', 'id_sorteado', 'dt_sorteio', 'foto', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
@@ -122,10 +122,10 @@ class AmigoTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Data' => 0, 'IdSorteou' => 1, 'Sorteado' => 2, 'Nome' => 3, 'Id' => 4, ),
-        self::TYPE_CAMELNAME     => array('data' => 0, 'idSorteou' => 1, 'sorteado' => 2, 'nome' => 3, 'id' => 4, ),
-        self::TYPE_COLNAME       => array(AmigoTableMap::COL_DATA => 0, AmigoTableMap::COL_ID_SORTEOU => 1, AmigoTableMap::COL_SORTEADO => 2, AmigoTableMap::COL_NOME => 3, AmigoTableMap::COL_ID => 4, ),
-        self::TYPE_FIELDNAME     => array('data' => 0, 'id_sorteou' => 1, 'sorteado' => 2, 'nome' => 3, 'id' => 4, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Nome' => 1, 'IdSorteado' => 2, 'DtSorteio' => 3, 'Foto' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'nome' => 1, 'idSorteado' => 2, 'dtSorteio' => 3, 'foto' => 4, ),
+        self::TYPE_COLNAME       => array(AmigoTableMap::COL_ID => 0, AmigoTableMap::COL_NOME => 1, AmigoTableMap::COL_ID_SORTEADO => 2, AmigoTableMap::COL_DT_SORTEIO => 3, AmigoTableMap::COL_FOTO => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'nome' => 1, 'id_sorteado' => 2, 'dt_sorteio' => 3, 'foto' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
@@ -147,11 +147,11 @@ class AmigoTableMap extends TableMap
         $this->setUseIdGenerator(true);
         $this->setPrimaryKeyMethodInfo('amigo_id_seq');
         // columns
-        $this->addColumn('data', 'Data', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('id_sorteou', 'IdSorteou', 'INTEGER', 'amigo', 'id', false, null, null);
-        $this->addColumn('sorteado', 'Sorteado', 'BOOLEAN', false, 1, false);
-        $this->addColumn('nome', 'Nome', 'VARCHAR', false, 200, null);
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('nome', 'Nome', 'VARCHAR', false, 200, null);
+        $this->addColumn('id_sorteado', 'IdSorteado', 'INTEGER', false, null, null);
+        $this->addColumn('dt_sorteio', 'DtSorteio', 'TIMESTAMP', false, null, null);
+        $this->addColumn('foto', 'Foto', 'VARCHAR', false, 200, null);
     } // initialize()
 
     /**
@@ -159,9 +159,6 @@ class AmigoTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('AmigoRelatedByIdSorteou', '\\Amigo', RelationMap::MANY_TO_ONE, array('id_sorteou' => 'id', ), null, null);
-        $this->addRelation('AmigoRelatedById', '\\Amigo', RelationMap::ONE_TO_MANY, array('id' => 'id_sorteou', ), null, null, 'AmigosRelatedById');
-        $this->addRelation('Presente', '\\Presente', RelationMap::ONE_TO_MANY, array('id' => 'id_usuario', ), null, null, 'Presentes');
     } // buildRelations()
 
     /**
@@ -180,11 +177,11 @@ class AmigoTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -203,7 +200,7 @@ class AmigoTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 4 + $offset
+                ? 0 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -305,17 +302,17 @@ class AmigoTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(AmigoTableMap::COL_DATA);
-            $criteria->addSelectColumn(AmigoTableMap::COL_ID_SORTEOU);
-            $criteria->addSelectColumn(AmigoTableMap::COL_SORTEADO);
-            $criteria->addSelectColumn(AmigoTableMap::COL_NOME);
             $criteria->addSelectColumn(AmigoTableMap::COL_ID);
+            $criteria->addSelectColumn(AmigoTableMap::COL_NOME);
+            $criteria->addSelectColumn(AmigoTableMap::COL_ID_SORTEADO);
+            $criteria->addSelectColumn(AmigoTableMap::COL_DT_SORTEIO);
+            $criteria->addSelectColumn(AmigoTableMap::COL_FOTO);
         } else {
-            $criteria->addSelectColumn($alias . '.data');
-            $criteria->addSelectColumn($alias . '.id_sorteou');
-            $criteria->addSelectColumn($alias . '.sorteado');
-            $criteria->addSelectColumn($alias . '.nome');
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.nome');
+            $criteria->addSelectColumn($alias . '.id_sorteado');
+            $criteria->addSelectColumn($alias . '.dt_sorteio');
+            $criteria->addSelectColumn($alias . '.foto');
         }
     }
 

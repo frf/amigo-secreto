@@ -3,22 +3,22 @@
     <propel>
         <database>
             <connections>
-                <connection id="oimovel">
+                <connection id="amigosecreto">
                     <adapter>pgsql</adapter>
                     <classname>Propel\Runtime\Connection\DebugPDO</classname>
-                    <dsn>pgsql:host=localhost;dbname=oimovel</dsn>
-                    <user>oimovel</user>
-                    <password>oimovel</password>
+                    <dsn>pgsql:host=localhost;dbname=amigosecreto</dsn>
+                    <user>amigosecreto</user>
+                    <password>amigosecreto</password>
                 </connection>
             </connections>
         </database>
         <runtime>
-            <defaultConnection>oimovel</defaultConnection>
-            <connection>oimovel</connection>
+            <defaultConnection>amigosecreto</defaultConnection>
+            <connection>amigosecreto</connection>
         </runtime>
         <generator>
-            <defaultConnection>oimovel</defaultConnection>
-            <connection>oimovel</connection>
+            <defaultConnection>amigosecreto</defaultConnection>
+            <connection>amigosecreto</connection>
         </generator>
     </propel>
 </config>

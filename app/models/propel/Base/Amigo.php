@@ -2,10 +2,7 @@
 
 namespace Base;
 
-use \Amigo as ChildAmigo;
 use \AmigoQuery as ChildAmigoQuery;
-use \Presente as ChildPresente;
-use \PresenteQuery as ChildPresenteQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
@@ -15,7 +12,6 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -66,23 +62,10 @@ abstract class Amigo implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the data field.
-     * @var        \DateTime
-     */
-    protected $data;
-
-    /**
-     * The value for the id_sorteou field.
+     * The value for the id field.
      * @var        int
      */
-    protected $id_sorteou;
-
-    /**
-     * The value for the sorteado field.
-     * Note: this column has a database default value of: false
-     * @var        boolean
-     */
-    protected $sorteado;
+    protected $id;
 
     /**
      * The value for the nome field.
@@ -91,27 +74,22 @@ abstract class Amigo implements ActiveRecordInterface
     protected $nome;
 
     /**
-     * The value for the id field.
+     * The value for the id_sorteado field.
      * @var        int
      */
-    protected $id;
+    protected $id_sorteado;
 
     /**
-     * @var        ChildAmigo
+     * The value for the dt_sorteio field.
+     * @var        \DateTime
      */
-    protected $aAmigoRelatedByIdSorteou;
+    protected $dt_sorteio;
 
     /**
-     * @var        ObjectCollection|ChildAmigo[] Collection to store aggregation of ChildAmigo objects.
+     * The value for the foto field.
+     * @var        string
      */
-    protected $collAmigosRelatedById;
-    protected $collAmigosRelatedByIdPartial;
-
-    /**
-     * @var        ObjectCollection|ChildPresente[] Collection to store aggregation of ChildPresente objects.
-     */
-    protected $collPresentes;
-    protected $collPresentesPartial;
+    protected $foto;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -122,35 +100,10 @@ abstract class Amigo implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildAmigo[]
-     */
-    protected $amigosRelatedByIdScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildPresente[]
-     */
-    protected $presentesScheduledForDeletion = null;
-
-    /**
-     * Applies default values to this object.
-     * This method should be called from the object's constructor (or
-     * equivalent initialization method).
-     * @see __construct()
-     */
-    public function applyDefaultValues()
-    {
-        $this->sorteado = false;
-    }
-
-    /**
      * Initializes internal state of Base\Amigo object.
-     * @see applyDefaults()
      */
     public function __construct()
     {
-        $this->applyDefaultValues();
     }
 
     /**
@@ -364,53 +317,13 @@ abstract class Amigo implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [data] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getData($format = NULL)
-    {
-        if ($format === null) {
-            return $this->data;
-        } else {
-            return $this->data instanceof \DateTime ? $this->data->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [id_sorteou] column value.
+     * Get the [id] column value.
      *
      * @return int
      */
-    public function getIdSorteou()
+    public function getId()
     {
-        return $this->id_sorteou;
-    }
-
-    /**
-     * Get the [sorteado] column value.
-     *
-     * @return boolean
-     */
-    public function getSorteado()
-    {
-        return $this->sorteado;
-    }
-
-    /**
-     * Get the [sorteado] column value.
-     *
-     * @return boolean
-     */
-    public function isSorteado()
-    {
-        return $this->getSorteado();
+        return $this->id;
     }
 
     /**
@@ -424,106 +337,44 @@ abstract class Amigo implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id] column value.
+     * Get the [id_sorteado] column value.
      *
      * @return int
      */
-    public function getId()
+    public function getIdSorteado()
     {
-        return $this->id;
+        return $this->id_sorteado;
     }
 
     /**
-     * Sets the value of [data] column to a normalized version of the date/time value specified.
+     * Get the [optionally formatted] temporal [dt_sorteio] column value.
      *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\Amigo The current object (for fluent API support)
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function setData($v)
+    public function getDtSorteio($format = NULL)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->data !== null || $dt !== null) {
-            if ($dt !== $this->data) {
-                $this->data = $dt;
-                $this->modifiedColumns[AmigoTableMap::COL_DATA] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setData()
+        if ($format === null) {
+            return $this->dt_sorteio;
+        } else {
+            return $this->dt_sorteio instanceof \DateTime ? $this->dt_sorteio->format($format) : null;
+        }
+    }
 
     /**
-     * Set the value of [id_sorteou] column.
+     * Get the [foto] column value.
      *
-     * @param  int $v new value
-     * @return $this|\Amigo The current object (for fluent API support)
+     * @return string
      */
-    public function setIdSorteou($v)
+    public function getFoto()
     {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_sorteou !== $v) {
-            $this->id_sorteou = $v;
-            $this->modifiedColumns[AmigoTableMap::COL_ID_SORTEOU] = true;
-        }
-
-        if ($this->aAmigoRelatedByIdSorteou !== null && $this->aAmigoRelatedByIdSorteou->getId() !== $v) {
-            $this->aAmigoRelatedByIdSorteou = null;
-        }
-
-        return $this;
-    } // setIdSorteou()
-
-    /**
-     * Sets the value of the [sorteado] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     *
-     * @param  boolean|integer|string $v The new value
-     * @return $this|\Amigo The current object (for fluent API support)
-     */
-    public function setSorteado($v)
-    {
-        if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
-        }
-
-        if ($this->sorteado !== $v) {
-            $this->sorteado = $v;
-            $this->modifiedColumns[AmigoTableMap::COL_SORTEADO] = true;
-        }
-
-        return $this;
-    } // setSorteado()
-
-    /**
-     * Set the value of [nome] column.
-     *
-     * @param  string $v new value
-     * @return $this|\Amigo The current object (for fluent API support)
-     */
-    public function setNome($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->nome !== $v) {
-            $this->nome = $v;
-            $this->modifiedColumns[AmigoTableMap::COL_NOME] = true;
-        }
-
-        return $this;
-    } // setNome()
+        return $this->foto;
+    }
 
     /**
      * Set the value of [id] column.
@@ -546,6 +397,86 @@ abstract class Amigo implements ActiveRecordInterface
     } // setId()
 
     /**
+     * Set the value of [nome] column.
+     *
+     * @param  string $v new value
+     * @return $this|\Amigo The current object (for fluent API support)
+     */
+    public function setNome($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->nome !== $v) {
+            $this->nome = $v;
+            $this->modifiedColumns[AmigoTableMap::COL_NOME] = true;
+        }
+
+        return $this;
+    } // setNome()
+
+    /**
+     * Set the value of [id_sorteado] column.
+     *
+     * @param  int $v new value
+     * @return $this|\Amigo The current object (for fluent API support)
+     */
+    public function setIdSorteado($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id_sorteado !== $v) {
+            $this->id_sorteado = $v;
+            $this->modifiedColumns[AmigoTableMap::COL_ID_SORTEADO] = true;
+        }
+
+        return $this;
+    } // setIdSorteado()
+
+    /**
+     * Sets the value of [dt_sorteio] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\Amigo The current object (for fluent API support)
+     */
+    public function setDtSorteio($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->dt_sorteio !== null || $dt !== null) {
+            if ($dt !== $this->dt_sorteio) {
+                $this->dt_sorteio = $dt;
+                $this->modifiedColumns[AmigoTableMap::COL_DT_SORTEIO] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setDtSorteio()
+
+    /**
+     * Set the value of [foto] column.
+     *
+     * @param  string $v new value
+     * @return $this|\Amigo The current object (for fluent API support)
+     */
+    public function setFoto($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->foto !== $v) {
+            $this->foto = $v;
+            $this->modifiedColumns[AmigoTableMap::COL_FOTO] = true;
+        }
+
+        return $this;
+    } // setFoto()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -555,10 +486,6 @@ abstract class Amigo implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->sorteado !== false) {
-                return false;
-            }
-
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -585,20 +512,20 @@ abstract class Amigo implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : AmigoTableMap::translateFieldName('Data', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->data = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : AmigoTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AmigoTableMap::translateFieldName('IdSorteou', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id_sorteou = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AmigoTableMap::translateFieldName('Sorteado', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->sorteado = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AmigoTableMap::translateFieldName('Nome', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AmigoTableMap::translateFieldName('Nome', TableMap::TYPE_PHPNAME, $indexType)];
             $this->nome = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AmigoTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AmigoTableMap::translateFieldName('IdSorteado', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id_sorteado = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AmigoTableMap::translateFieldName('DtSorteio', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->dt_sorteio = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AmigoTableMap::translateFieldName('Foto', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->foto = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -629,9 +556,6 @@ abstract class Amigo implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aAmigoRelatedByIdSorteou !== null && $this->id_sorteou !== $this->aAmigoRelatedByIdSorteou->getId()) {
-            $this->aAmigoRelatedByIdSorteou = null;
-        }
     } // ensureConsistency
 
     /**
@@ -670,11 +594,6 @@ abstract class Amigo implements ActiveRecordInterface
         $this->hydrate($row, 0, true, $dataFetcher->getIndexType()); // rehydrate
 
         if ($deep) {  // also de-associate any related objects?
-
-            $this->aAmigoRelatedByIdSorteou = null;
-            $this->collAmigosRelatedById = null;
-
-            $this->collPresentes = null;
 
         } // if (deep)
     }
@@ -775,18 +694,6 @@ abstract class Amigo implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aAmigoRelatedByIdSorteou !== null) {
-                if ($this->aAmigoRelatedByIdSorteou->isModified() || $this->aAmigoRelatedByIdSorteou->isNew()) {
-                    $affectedRows += $this->aAmigoRelatedByIdSorteou->save($con);
-                }
-                $this->setAmigoRelatedByIdSorteou($this->aAmigoRelatedByIdSorteou);
-            }
-
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -796,42 +703,6 @@ abstract class Amigo implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
-            }
-
-            if ($this->amigosRelatedByIdScheduledForDeletion !== null) {
-                if (!$this->amigosRelatedByIdScheduledForDeletion->isEmpty()) {
-                    foreach ($this->amigosRelatedByIdScheduledForDeletion as $amigoRelatedById) {
-                        // need to save related object because we set the relation to null
-                        $amigoRelatedById->save($con);
-                    }
-                    $this->amigosRelatedByIdScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collAmigosRelatedById !== null) {
-                foreach ($this->collAmigosRelatedById as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->presentesScheduledForDeletion !== null) {
-                if (!$this->presentesScheduledForDeletion->isEmpty()) {
-                    foreach ($this->presentesScheduledForDeletion as $presente) {
-                        // need to save related object because we set the relation to null
-                        $presente->save($con);
-                    }
-                    $this->presentesScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collPresentes !== null) {
-                foreach ($this->collPresentes as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -869,20 +740,20 @@ abstract class Amigo implements ActiveRecordInterface
 
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(AmigoTableMap::COL_DATA)) {
-            $modifiedColumns[':p' . $index++]  = 'data';
-        }
-        if ($this->isColumnModified(AmigoTableMap::COL_ID_SORTEOU)) {
-            $modifiedColumns[':p' . $index++]  = 'id_sorteou';
-        }
-        if ($this->isColumnModified(AmigoTableMap::COL_SORTEADO)) {
-            $modifiedColumns[':p' . $index++]  = 'sorteado';
+        if ($this->isColumnModified(AmigoTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
         }
         if ($this->isColumnModified(AmigoTableMap::COL_NOME)) {
             $modifiedColumns[':p' . $index++]  = 'nome';
         }
-        if ($this->isColumnModified(AmigoTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'id';
+        if ($this->isColumnModified(AmigoTableMap::COL_ID_SORTEADO)) {
+            $modifiedColumns[':p' . $index++]  = 'id_sorteado';
+        }
+        if ($this->isColumnModified(AmigoTableMap::COL_DT_SORTEIO)) {
+            $modifiedColumns[':p' . $index++]  = 'dt_sorteio';
+        }
+        if ($this->isColumnModified(AmigoTableMap::COL_FOTO)) {
+            $modifiedColumns[':p' . $index++]  = 'foto';
         }
 
         $sql = sprintf(
@@ -895,20 +766,20 @@ abstract class Amigo implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'data':
-                        $stmt->bindValue($identifier, $this->data ? $this->data->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case 'id_sorteou':
-                        $stmt->bindValue($identifier, $this->id_sorteou, PDO::PARAM_INT);
-                        break;
-                    case 'sorteado':
-                        $stmt->bindValue($identifier, $this->sorteado, PDO::PARAM_BOOL);
+                    case 'id':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                     case 'nome':
                         $stmt->bindValue($identifier, $this->nome, PDO::PARAM_STR);
                         break;
-                    case 'id':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                    case 'id_sorteado':
+                        $stmt->bindValue($identifier, $this->id_sorteado, PDO::PARAM_INT);
+                        break;
+                    case 'dt_sorteio':
+                        $stmt->bindValue($identifier, $this->dt_sorteio ? $this->dt_sorteio->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'foto':
+                        $stmt->bindValue($identifier, $this->foto, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -966,19 +837,19 @@ abstract class Amigo implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getData();
+                return $this->getId();
                 break;
             case 1:
-                return $this->getIdSorteou();
-                break;
-            case 2:
-                return $this->getSorteado();
-                break;
-            case 3:
                 return $this->getNome();
                 break;
+            case 2:
+                return $this->getIdSorteado();
+                break;
+            case 3:
+                return $this->getDtSorteio();
+                break;
             case 4:
-                return $this->getId();
+                return $this->getFoto();
                 break;
             default:
                 return null;
@@ -997,11 +868,10 @@ abstract class Amigo implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
-     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
     {
 
         if (isset($alreadyDumpedObjects['Amigo'][$this->hashCode()])) {
@@ -1010,64 +880,17 @@ abstract class Amigo implements ActiveRecordInterface
         $alreadyDumpedObjects['Amigo'][$this->hashCode()] = true;
         $keys = AmigoTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getData(),
-            $keys[1] => $this->getIdSorteou(),
-            $keys[2] => $this->getSorteado(),
-            $keys[3] => $this->getNome(),
-            $keys[4] => $this->getId(),
+            $keys[0] => $this->getId(),
+            $keys[1] => $this->getNome(),
+            $keys[2] => $this->getIdSorteado(),
+            $keys[3] => $this->getDtSorteio(),
+            $keys[4] => $this->getFoto(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
-        if ($includeForeignObjects) {
-            if (null !== $this->aAmigoRelatedByIdSorteou) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'amigo';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'amigo';
-                        break;
-                    default:
-                        $key = 'Amigo';
-                }
-
-                $result[$key] = $this->aAmigoRelatedByIdSorteou->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collAmigosRelatedById) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'amigos';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'amigos';
-                        break;
-                    default:
-                        $key = 'Amigos';
-                }
-
-                $result[$key] = $this->collAmigosRelatedById->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collPresentes) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'presentes';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'presentes';
-                        break;
-                    default:
-                        $key = 'Presentes';
-                }
-
-                $result[$key] = $this->collPresentes->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-        }
 
         return $result;
     }
@@ -1102,19 +925,19 @@ abstract class Amigo implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setData($value);
+                $this->setId($value);
                 break;
             case 1:
-                $this->setIdSorteou($value);
-                break;
-            case 2:
-                $this->setSorteado($value);
-                break;
-            case 3:
                 $this->setNome($value);
                 break;
+            case 2:
+                $this->setIdSorteado($value);
+                break;
+            case 3:
+                $this->setDtSorteio($value);
+                break;
             case 4:
-                $this->setId($value);
+                $this->setFoto($value);
                 break;
         } // switch()
 
@@ -1143,19 +966,19 @@ abstract class Amigo implements ActiveRecordInterface
         $keys = AmigoTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setData($arr[$keys[0]]);
+            $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setIdSorteou($arr[$keys[1]]);
+            $this->setNome($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setSorteado($arr[$keys[2]]);
+            $this->setIdSorteado($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setNome($arr[$keys[3]]);
+            $this->setDtSorteio($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setId($arr[$keys[4]]);
+            $this->setFoto($arr[$keys[4]]);
         }
     }
 
@@ -1198,20 +1021,20 @@ abstract class Amigo implements ActiveRecordInterface
     {
         $criteria = new Criteria(AmigoTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(AmigoTableMap::COL_DATA)) {
-            $criteria->add(AmigoTableMap::COL_DATA, $this->data);
-        }
-        if ($this->isColumnModified(AmigoTableMap::COL_ID_SORTEOU)) {
-            $criteria->add(AmigoTableMap::COL_ID_SORTEOU, $this->id_sorteou);
-        }
-        if ($this->isColumnModified(AmigoTableMap::COL_SORTEADO)) {
-            $criteria->add(AmigoTableMap::COL_SORTEADO, $this->sorteado);
+        if ($this->isColumnModified(AmigoTableMap::COL_ID)) {
+            $criteria->add(AmigoTableMap::COL_ID, $this->id);
         }
         if ($this->isColumnModified(AmigoTableMap::COL_NOME)) {
             $criteria->add(AmigoTableMap::COL_NOME, $this->nome);
         }
-        if ($this->isColumnModified(AmigoTableMap::COL_ID)) {
-            $criteria->add(AmigoTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(AmigoTableMap::COL_ID_SORTEADO)) {
+            $criteria->add(AmigoTableMap::COL_ID_SORTEADO, $this->id_sorteado);
+        }
+        if ($this->isColumnModified(AmigoTableMap::COL_DT_SORTEIO)) {
+            $criteria->add(AmigoTableMap::COL_DT_SORTEIO, $this->dt_sorteio);
+        }
+        if ($this->isColumnModified(AmigoTableMap::COL_FOTO)) {
+            $criteria->add(AmigoTableMap::COL_FOTO, $this->foto);
         }
 
         return $criteria;
@@ -1299,30 +1122,10 @@ abstract class Amigo implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setData($this->getData());
-        $copyObj->setIdSorteou($this->getIdSorteou());
-        $copyObj->setSorteado($this->getSorteado());
         $copyObj->setNome($this->getNome());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getAmigosRelatedById() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addAmigoRelatedById($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getPresentes() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addPresente($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
+        $copyObj->setIdSorteado($this->getIdSorteado());
+        $copyObj->setDtSorteio($this->getDtSorteio());
+        $copyObj->setFoto($this->getFoto());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1352,529 +1155,19 @@ abstract class Amigo implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildAmigo object.
-     *
-     * @param  ChildAmigo $v
-     * @return $this|\Amigo The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setAmigoRelatedByIdSorteou(ChildAmigo $v = null)
-    {
-        if ($v === null) {
-            $this->setIdSorteou(NULL);
-        } else {
-            $this->setIdSorteou($v->getId());
-        }
-
-        $this->aAmigoRelatedByIdSorteou = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildAmigo object, it will not be re-added.
-        if ($v !== null) {
-            $v->addAmigoRelatedById($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildAmigo object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildAmigo The associated ChildAmigo object.
-     * @throws PropelException
-     */
-    public function getAmigoRelatedByIdSorteou(ConnectionInterface $con = null)
-    {
-        if ($this->aAmigoRelatedByIdSorteou === null && ($this->id_sorteou !== null)) {
-            $this->aAmigoRelatedByIdSorteou = ChildAmigoQuery::create()->findPk($this->id_sorteou, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aAmigoRelatedByIdSorteou->addAmigosRelatedById($this);
-             */
-        }
-
-        return $this->aAmigoRelatedByIdSorteou;
-    }
-
-
-    /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
-     *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('AmigoRelatedById' == $relationName) {
-            return $this->initAmigosRelatedById();
-        }
-        if ('Presente' == $relationName) {
-            return $this->initPresentes();
-        }
-    }
-
-    /**
-     * Clears out the collAmigosRelatedById collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addAmigosRelatedById()
-     */
-    public function clearAmigosRelatedById()
-    {
-        $this->collAmigosRelatedById = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collAmigosRelatedById collection loaded partially.
-     */
-    public function resetPartialAmigosRelatedById($v = true)
-    {
-        $this->collAmigosRelatedByIdPartial = $v;
-    }
-
-    /**
-     * Initializes the collAmigosRelatedById collection.
-     *
-     * By default this just sets the collAmigosRelatedById collection to an empty array (like clearcollAmigosRelatedById());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initAmigosRelatedById($overrideExisting = true)
-    {
-        if (null !== $this->collAmigosRelatedById && !$overrideExisting) {
-            return;
-        }
-        $this->collAmigosRelatedById = new ObjectCollection();
-        $this->collAmigosRelatedById->setModel('\Amigo');
-    }
-
-    /**
-     * Gets an array of ChildAmigo objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildAmigo is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildAmigo[] List of ChildAmigo objects
-     * @throws PropelException
-     */
-    public function getAmigosRelatedById(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collAmigosRelatedByIdPartial && !$this->isNew();
-        if (null === $this->collAmigosRelatedById || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collAmigosRelatedById) {
-                // return empty collection
-                $this->initAmigosRelatedById();
-            } else {
-                $collAmigosRelatedById = ChildAmigoQuery::create(null, $criteria)
-                    ->filterByAmigoRelatedByIdSorteou($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collAmigosRelatedByIdPartial && count($collAmigosRelatedById)) {
-                        $this->initAmigosRelatedById(false);
-
-                        foreach ($collAmigosRelatedById as $obj) {
-                            if (false == $this->collAmigosRelatedById->contains($obj)) {
-                                $this->collAmigosRelatedById->append($obj);
-                            }
-                        }
-
-                        $this->collAmigosRelatedByIdPartial = true;
-                    }
-
-                    return $collAmigosRelatedById;
-                }
-
-                if ($partial && $this->collAmigosRelatedById) {
-                    foreach ($this->collAmigosRelatedById as $obj) {
-                        if ($obj->isNew()) {
-                            $collAmigosRelatedById[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collAmigosRelatedById = $collAmigosRelatedById;
-                $this->collAmigosRelatedByIdPartial = false;
-            }
-        }
-
-        return $this->collAmigosRelatedById;
-    }
-
-    /**
-     * Sets a collection of ChildAmigo objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $amigosRelatedById A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildAmigo The current object (for fluent API support)
-     */
-    public function setAmigosRelatedById(Collection $amigosRelatedById, ConnectionInterface $con = null)
-    {
-        /** @var ChildAmigo[] $amigosRelatedByIdToDelete */
-        $amigosRelatedByIdToDelete = $this->getAmigosRelatedById(new Criteria(), $con)->diff($amigosRelatedById);
-
-
-        $this->amigosRelatedByIdScheduledForDeletion = $amigosRelatedByIdToDelete;
-
-        foreach ($amigosRelatedByIdToDelete as $amigoRelatedByIdRemoved) {
-            $amigoRelatedByIdRemoved->setAmigoRelatedByIdSorteou(null);
-        }
-
-        $this->collAmigosRelatedById = null;
-        foreach ($amigosRelatedById as $amigoRelatedById) {
-            $this->addAmigoRelatedById($amigoRelatedById);
-        }
-
-        $this->collAmigosRelatedById = $amigosRelatedById;
-        $this->collAmigosRelatedByIdPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Amigo objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Amigo objects.
-     * @throws PropelException
-     */
-    public function countAmigosRelatedById(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collAmigosRelatedByIdPartial && !$this->isNew();
-        if (null === $this->collAmigosRelatedById || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collAmigosRelatedById) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getAmigosRelatedById());
-            }
-
-            $query = ChildAmigoQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByAmigoRelatedByIdSorteou($this)
-                ->count($con);
-        }
-
-        return count($this->collAmigosRelatedById);
-    }
-
-    /**
-     * Method called to associate a ChildAmigo object to this object
-     * through the ChildAmigo foreign key attribute.
-     *
-     * @param  ChildAmigo $l ChildAmigo
-     * @return $this|\Amigo The current object (for fluent API support)
-     */
-    public function addAmigoRelatedById(ChildAmigo $l)
-    {
-        if ($this->collAmigosRelatedById === null) {
-            $this->initAmigosRelatedById();
-            $this->collAmigosRelatedByIdPartial = true;
-        }
-
-        if (!$this->collAmigosRelatedById->contains($l)) {
-            $this->doAddAmigoRelatedById($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildAmigo $amigoRelatedById The ChildAmigo object to add.
-     */
-    protected function doAddAmigoRelatedById(ChildAmigo $amigoRelatedById)
-    {
-        $this->collAmigosRelatedById[]= $amigoRelatedById;
-        $amigoRelatedById->setAmigoRelatedByIdSorteou($this);
-    }
-
-    /**
-     * @param  ChildAmigo $amigoRelatedById The ChildAmigo object to remove.
-     * @return $this|ChildAmigo The current object (for fluent API support)
-     */
-    public function removeAmigoRelatedById(ChildAmigo $amigoRelatedById)
-    {
-        if ($this->getAmigosRelatedById()->contains($amigoRelatedById)) {
-            $pos = $this->collAmigosRelatedById->search($amigoRelatedById);
-            $this->collAmigosRelatedById->remove($pos);
-            if (null === $this->amigosRelatedByIdScheduledForDeletion) {
-                $this->amigosRelatedByIdScheduledForDeletion = clone $this->collAmigosRelatedById;
-                $this->amigosRelatedByIdScheduledForDeletion->clear();
-            }
-            $this->amigosRelatedByIdScheduledForDeletion[]= $amigoRelatedById;
-            $amigoRelatedById->setAmigoRelatedByIdSorteou(null);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Clears out the collPresentes collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addPresentes()
-     */
-    public function clearPresentes()
-    {
-        $this->collPresentes = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collPresentes collection loaded partially.
-     */
-    public function resetPartialPresentes($v = true)
-    {
-        $this->collPresentesPartial = $v;
-    }
-
-    /**
-     * Initializes the collPresentes collection.
-     *
-     * By default this just sets the collPresentes collection to an empty array (like clearcollPresentes());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initPresentes($overrideExisting = true)
-    {
-        if (null !== $this->collPresentes && !$overrideExisting) {
-            return;
-        }
-        $this->collPresentes = new ObjectCollection();
-        $this->collPresentes->setModel('\Presente');
-    }
-
-    /**
-     * Gets an array of ChildPresente objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildAmigo is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildPresente[] List of ChildPresente objects
-     * @throws PropelException
-     */
-    public function getPresentes(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPresentesPartial && !$this->isNew();
-        if (null === $this->collPresentes || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collPresentes) {
-                // return empty collection
-                $this->initPresentes();
-            } else {
-                $collPresentes = ChildPresenteQuery::create(null, $criteria)
-                    ->filterByAmigo($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collPresentesPartial && count($collPresentes)) {
-                        $this->initPresentes(false);
-
-                        foreach ($collPresentes as $obj) {
-                            if (false == $this->collPresentes->contains($obj)) {
-                                $this->collPresentes->append($obj);
-                            }
-                        }
-
-                        $this->collPresentesPartial = true;
-                    }
-
-                    return $collPresentes;
-                }
-
-                if ($partial && $this->collPresentes) {
-                    foreach ($this->collPresentes as $obj) {
-                        if ($obj->isNew()) {
-                            $collPresentes[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collPresentes = $collPresentes;
-                $this->collPresentesPartial = false;
-            }
-        }
-
-        return $this->collPresentes;
-    }
-
-    /**
-     * Sets a collection of ChildPresente objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $presentes A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildAmigo The current object (for fluent API support)
-     */
-    public function setPresentes(Collection $presentes, ConnectionInterface $con = null)
-    {
-        /** @var ChildPresente[] $presentesToDelete */
-        $presentesToDelete = $this->getPresentes(new Criteria(), $con)->diff($presentes);
-
-
-        $this->presentesScheduledForDeletion = $presentesToDelete;
-
-        foreach ($presentesToDelete as $presenteRemoved) {
-            $presenteRemoved->setAmigo(null);
-        }
-
-        $this->collPresentes = null;
-        foreach ($presentes as $presente) {
-            $this->addPresente($presente);
-        }
-
-        $this->collPresentes = $presentes;
-        $this->collPresentesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Presente objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Presente objects.
-     * @throws PropelException
-     */
-    public function countPresentes(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPresentesPartial && !$this->isNew();
-        if (null === $this->collPresentes || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collPresentes) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getPresentes());
-            }
-
-            $query = ChildPresenteQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByAmigo($this)
-                ->count($con);
-        }
-
-        return count($this->collPresentes);
-    }
-
-    /**
-     * Method called to associate a ChildPresente object to this object
-     * through the ChildPresente foreign key attribute.
-     *
-     * @param  ChildPresente $l ChildPresente
-     * @return $this|\Amigo The current object (for fluent API support)
-     */
-    public function addPresente(ChildPresente $l)
-    {
-        if ($this->collPresentes === null) {
-            $this->initPresentes();
-            $this->collPresentesPartial = true;
-        }
-
-        if (!$this->collPresentes->contains($l)) {
-            $this->doAddPresente($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildPresente $presente The ChildPresente object to add.
-     */
-    protected function doAddPresente(ChildPresente $presente)
-    {
-        $this->collPresentes[]= $presente;
-        $presente->setAmigo($this);
-    }
-
-    /**
-     * @param  ChildPresente $presente The ChildPresente object to remove.
-     * @return $this|ChildAmigo The current object (for fluent API support)
-     */
-    public function removePresente(ChildPresente $presente)
-    {
-        if ($this->getPresentes()->contains($presente)) {
-            $pos = $this->collPresentes->search($presente);
-            $this->collPresentes->remove($pos);
-            if (null === $this->presentesScheduledForDeletion) {
-                $this->presentesScheduledForDeletion = clone $this->collPresentes;
-                $this->presentesScheduledForDeletion->clear();
-            }
-            $this->presentesScheduledForDeletion[]= $presente;
-            $presente->setAmigo(null);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
-        if (null !== $this->aAmigoRelatedByIdSorteou) {
-            $this->aAmigoRelatedByIdSorteou->removeAmigoRelatedById($this);
-        }
-        $this->data = null;
-        $this->id_sorteou = null;
-        $this->sorteado = null;
-        $this->nome = null;
         $this->id = null;
+        $this->nome = null;
+        $this->id_sorteado = null;
+        $this->dt_sorteio = null;
+        $this->foto = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
-        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1891,21 +1184,8 @@ abstract class Amigo implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collAmigosRelatedById) {
-                foreach ($this->collAmigosRelatedById as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collPresentes) {
-                foreach ($this->collPresentes as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collAmigosRelatedById = null;
-        $this->collPresentes = null;
-        $this->aAmigoRelatedByIdSorteou = null;
     }
 
     /**

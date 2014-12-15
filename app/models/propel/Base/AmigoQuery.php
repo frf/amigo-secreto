@@ -10,7 +10,6 @@ use Map\AmigoTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -20,51 +19,37 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildAmigoQuery orderByData($order = Criteria::ASC) Order by the data column
- * @method     ChildAmigoQuery orderByIdSorteou($order = Criteria::ASC) Order by the id_sorteou column
- * @method     ChildAmigoQuery orderBySorteado($order = Criteria::ASC) Order by the sorteado column
- * @method     ChildAmigoQuery orderByNome($order = Criteria::ASC) Order by the nome column
  * @method     ChildAmigoQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildAmigoQuery orderByNome($order = Criteria::ASC) Order by the nome column
+ * @method     ChildAmigoQuery orderByIdSorteado($order = Criteria::ASC) Order by the id_sorteado column
+ * @method     ChildAmigoQuery orderByDtSorteio($order = Criteria::ASC) Order by the dt_sorteio column
+ * @method     ChildAmigoQuery orderByFoto($order = Criteria::ASC) Order by the foto column
  *
- * @method     ChildAmigoQuery groupByData() Group by the data column
- * @method     ChildAmigoQuery groupByIdSorteou() Group by the id_sorteou column
- * @method     ChildAmigoQuery groupBySorteado() Group by the sorteado column
- * @method     ChildAmigoQuery groupByNome() Group by the nome column
  * @method     ChildAmigoQuery groupById() Group by the id column
+ * @method     ChildAmigoQuery groupByNome() Group by the nome column
+ * @method     ChildAmigoQuery groupByIdSorteado() Group by the id_sorteado column
+ * @method     ChildAmigoQuery groupByDtSorteio() Group by the dt_sorteio column
+ * @method     ChildAmigoQuery groupByFoto() Group by the foto column
  *
  * @method     ChildAmigoQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildAmigoQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildAmigoQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildAmigoQuery leftJoinAmigoRelatedByIdSorteou($relationAlias = null) Adds a LEFT JOIN clause to the query using the AmigoRelatedByIdSorteou relation
- * @method     ChildAmigoQuery rightJoinAmigoRelatedByIdSorteou($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AmigoRelatedByIdSorteou relation
- * @method     ChildAmigoQuery innerJoinAmigoRelatedByIdSorteou($relationAlias = null) Adds a INNER JOIN clause to the query using the AmigoRelatedByIdSorteou relation
- *
- * @method     ChildAmigoQuery leftJoinAmigoRelatedById($relationAlias = null) Adds a LEFT JOIN clause to the query using the AmigoRelatedById relation
- * @method     ChildAmigoQuery rightJoinAmigoRelatedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AmigoRelatedById relation
- * @method     ChildAmigoQuery innerJoinAmigoRelatedById($relationAlias = null) Adds a INNER JOIN clause to the query using the AmigoRelatedById relation
- *
- * @method     ChildAmigoQuery leftJoinPresente($relationAlias = null) Adds a LEFT JOIN clause to the query using the Presente relation
- * @method     ChildAmigoQuery rightJoinPresente($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Presente relation
- * @method     ChildAmigoQuery innerJoinPresente($relationAlias = null) Adds a INNER JOIN clause to the query using the Presente relation
- *
- * @method     \AmigoQuery|\PresenteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
- *
  * @method     ChildAmigo findOne(ConnectionInterface $con = null) Return the first ChildAmigo matching the query
  * @method     ChildAmigo findOneOrCreate(ConnectionInterface $con = null) Return the first ChildAmigo matching the query, or a new ChildAmigo object populated from the query conditions when no match is found
  *
- * @method     ChildAmigo findOneByData(string $data) Return the first ChildAmigo filtered by the data column
- * @method     ChildAmigo findOneByIdSorteou(int $id_sorteou) Return the first ChildAmigo filtered by the id_sorteou column
- * @method     ChildAmigo findOneBySorteado(boolean $sorteado) Return the first ChildAmigo filtered by the sorteado column
- * @method     ChildAmigo findOneByNome(string $nome) Return the first ChildAmigo filtered by the nome column
  * @method     ChildAmigo findOneById(int $id) Return the first ChildAmigo filtered by the id column
+ * @method     ChildAmigo findOneByNome(string $nome) Return the first ChildAmigo filtered by the nome column
+ * @method     ChildAmigo findOneByIdSorteado(int $id_sorteado) Return the first ChildAmigo filtered by the id_sorteado column
+ * @method     ChildAmigo findOneByDtSorteio(string $dt_sorteio) Return the first ChildAmigo filtered by the dt_sorteio column
+ * @method     ChildAmigo findOneByFoto(string $foto) Return the first ChildAmigo filtered by the foto column
  *
  * @method     ChildAmigo[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildAmigo objects based on current ModelCriteria
- * @method     ChildAmigo[]|ObjectCollection findByData(string $data) Return ChildAmigo objects filtered by the data column
- * @method     ChildAmigo[]|ObjectCollection findByIdSorteou(int $id_sorteou) Return ChildAmigo objects filtered by the id_sorteou column
- * @method     ChildAmigo[]|ObjectCollection findBySorteado(boolean $sorteado) Return ChildAmigo objects filtered by the sorteado column
- * @method     ChildAmigo[]|ObjectCollection findByNome(string $nome) Return ChildAmigo objects filtered by the nome column
  * @method     ChildAmigo[]|ObjectCollection findById(int $id) Return ChildAmigo objects filtered by the id column
+ * @method     ChildAmigo[]|ObjectCollection findByNome(string $nome) Return ChildAmigo objects filtered by the nome column
+ * @method     ChildAmigo[]|ObjectCollection findByIdSorteado(int $id_sorteado) Return ChildAmigo objects filtered by the id_sorteado column
+ * @method     ChildAmigo[]|ObjectCollection findByDtSorteio(string $dt_sorteio) Return ChildAmigo objects filtered by the dt_sorteio column
+ * @method     ChildAmigo[]|ObjectCollection findByFoto(string $foto) Return ChildAmigo objects filtered by the foto column
  * @method     ChildAmigo[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -78,7 +63,7 @@ abstract class AmigoQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'oimovel', $modelName = '\\Amigo', $modelAlias = null)
+    public function __construct($dbName = 'amigosecreto', $modelName = '\\Amigo', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -156,7 +141,7 @@ abstract class AmigoQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT data, id_sorteou, sorteado, nome, id FROM amigo WHERE id = :p0';
+        $sql = 'SELECT id, nome, id_sorteado, dt_sorteio, foto FROM amigo WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -247,148 +232,6 @@ abstract class AmigoQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the data column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByData('2011-03-14'); // WHERE data = '2011-03-14'
-     * $query->filterByData('now'); // WHERE data = '2011-03-14'
-     * $query->filterByData(array('max' => 'yesterday')); // WHERE data > '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $data The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildAmigoQuery The current query, for fluid interface
-     */
-    public function filterByData($data = null, $comparison = null)
-    {
-        if (is_array($data)) {
-            $useMinMax = false;
-            if (isset($data['min'])) {
-                $this->addUsingAlias(AmigoTableMap::COL_DATA, $data['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($data['max'])) {
-                $this->addUsingAlias(AmigoTableMap::COL_DATA, $data['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(AmigoTableMap::COL_DATA, $data, $comparison);
-    }
-
-    /**
-     * Filter the query on the id_sorteou column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByIdSorteou(1234); // WHERE id_sorteou = 1234
-     * $query->filterByIdSorteou(array(12, 34)); // WHERE id_sorteou IN (12, 34)
-     * $query->filterByIdSorteou(array('min' => 12)); // WHERE id_sorteou > 12
-     * </code>
-     *
-     * @see       filterByAmigoRelatedByIdSorteou()
-     *
-     * @param     mixed $idSorteou The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildAmigoQuery The current query, for fluid interface
-     */
-    public function filterByIdSorteou($idSorteou = null, $comparison = null)
-    {
-        if (is_array($idSorteou)) {
-            $useMinMax = false;
-            if (isset($idSorteou['min'])) {
-                $this->addUsingAlias(AmigoTableMap::COL_ID_SORTEOU, $idSorteou['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($idSorteou['max'])) {
-                $this->addUsingAlias(AmigoTableMap::COL_ID_SORTEOU, $idSorteou['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(AmigoTableMap::COL_ID_SORTEOU, $idSorteou, $comparison);
-    }
-
-    /**
-     * Filter the query on the sorteado column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterBySorteado(true); // WHERE sorteado = true
-     * $query->filterBySorteado('yes'); // WHERE sorteado = true
-     * </code>
-     *
-     * @param     boolean|string $sorteado The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildAmigoQuery The current query, for fluid interface
-     */
-    public function filterBySorteado($sorteado = null, $comparison = null)
-    {
-        if (is_string($sorteado)) {
-            $sorteado = in_array(strtolower($sorteado), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-        }
-
-        return $this->addUsingAlias(AmigoTableMap::COL_SORTEADO, $sorteado, $comparison);
-    }
-
-    /**
-     * Filter the query on the nome column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByNome('fooValue');   // WHERE nome = 'fooValue'
-     * $query->filterByNome('%fooValue%'); // WHERE nome LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $nome The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildAmigoQuery The current query, for fluid interface
-     */
-    public function filterByNome($nome = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($nome)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $nome)) {
-                $nome = str_replace('*', '%', $nome);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(AmigoTableMap::COL_NOME, $nome, $comparison);
-    }
-
-    /**
      * Filter the query on the id column
      *
      * Example usage:
@@ -430,226 +273,145 @@ abstract class AmigoQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Amigo object
+     * Filter the query on the nome column
      *
-     * @param \Amigo|ObjectCollection $amigo The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * Example usage:
+     * <code>
+     * $query->filterByNome('fooValue');   // WHERE nome = 'fooValue'
+     * $query->filterByNome('%fooValue%'); // WHERE nome LIKE '%fooValue%'
+     * </code>
      *
-     * @throws \Propel\Runtime\Exception\PropelException
+     * @param     string $nome The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildAmigoQuery The current query, for fluid interface
+     * @return $this|ChildAmigoQuery The current query, for fluid interface
      */
-    public function filterByAmigoRelatedByIdSorteou($amigo, $comparison = null)
+    public function filterByNome($nome = null, $comparison = null)
     {
-        if ($amigo instanceof \Amigo) {
-            return $this
-                ->addUsingAlias(AmigoTableMap::COL_ID_SORTEOU, $amigo->getId(), $comparison);
-        } elseif ($amigo instanceof ObjectCollection) {
+        if (null === $comparison) {
+            if (is_array($nome)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $nome)) {
+                $nome = str_replace('*', '%', $nome);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AmigoTableMap::COL_NOME, $nome, $comparison);
+    }
+
+    /**
+     * Filter the query on the id_sorteado column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIdSorteado(1234); // WHERE id_sorteado = 1234
+     * $query->filterByIdSorteado(array(12, 34)); // WHERE id_sorteado IN (12, 34)
+     * $query->filterByIdSorteado(array('min' => 12)); // WHERE id_sorteado > 12
+     * </code>
+     *
+     * @param     mixed $idSorteado The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildAmigoQuery The current query, for fluid interface
+     */
+    public function filterByIdSorteado($idSorteado = null, $comparison = null)
+    {
+        if (is_array($idSorteado)) {
+            $useMinMax = false;
+            if (isset($idSorteado['min'])) {
+                $this->addUsingAlias(AmigoTableMap::COL_ID_SORTEADO, $idSorteado['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($idSorteado['max'])) {
+                $this->addUsingAlias(AmigoTableMap::COL_ID_SORTEADO, $idSorteado['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
-
-            return $this
-                ->addUsingAlias(AmigoTableMap::COL_ID_SORTEOU, $amigo->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByAmigoRelatedByIdSorteou() only accepts arguments of type \Amigo or Collection');
         }
+
+        return $this->addUsingAlias(AmigoTableMap::COL_ID_SORTEADO, $idSorteado, $comparison);
     }
 
     /**
-     * Adds a JOIN clause to the query using the AmigoRelatedByIdSorteou relation
+     * Filter the query on the dt_sorteio column
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * Example usage:
+     * <code>
+     * $query->filterByDtSorteio('2011-03-14'); // WHERE dt_sorteio = '2011-03-14'
+     * $query->filterByDtSorteio('now'); // WHERE dt_sorteio = '2011-03-14'
+     * $query->filterByDtSorteio(array('max' => 'yesterday')); // WHERE dt_sorteio > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $dtSorteio The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildAmigoQuery The current query, for fluid interface
      */
-    public function joinAmigoRelatedByIdSorteou($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function filterByDtSorteio($dtSorteio = null, $comparison = null)
     {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('AmigoRelatedByIdSorteou');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
+        if (is_array($dtSorteio)) {
+            $useMinMax = false;
+            if (isset($dtSorteio['min'])) {
+                $this->addUsingAlias(AmigoTableMap::COL_DT_SORTEIO, $dtSorteio['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dtSorteio['max'])) {
+                $this->addUsingAlias(AmigoTableMap::COL_DT_SORTEIO, $dtSorteio['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
         }
 
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'AmigoRelatedByIdSorteou');
-        }
-
-        return $this;
+        return $this->addUsingAlias(AmigoTableMap::COL_DT_SORTEIO, $dtSorteio, $comparison);
     }
 
     /**
-     * Use the AmigoRelatedByIdSorteou relation Amigo object
+     * Filter the query on the foto column
      *
-     * @see useQuery()
+     * Example usage:
+     * <code>
+     * $query->filterByFoto('fooValue');   // WHERE foto = 'fooValue'
+     * $query->filterByFoto('%fooValue%'); // WHERE foto LIKE '%fooValue%'
+     * </code>
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \AmigoQuery A secondary query class using the current class as primary query
-     */
-    public function useAmigoRelatedByIdSorteouQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinAmigoRelatedByIdSorteou($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'AmigoRelatedByIdSorteou', '\AmigoQuery');
-    }
-
-    /**
-     * Filter the query by a related \Amigo object
-     *
-     * @param \Amigo|ObjectCollection $amigo  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildAmigoQuery The current query, for fluid interface
-     */
-    public function filterByAmigoRelatedById($amigo, $comparison = null)
-    {
-        if ($amigo instanceof \Amigo) {
-            return $this
-                ->addUsingAlias(AmigoTableMap::COL_ID, $amigo->getIdSorteou(), $comparison);
-        } elseif ($amigo instanceof ObjectCollection) {
-            return $this
-                ->useAmigoRelatedByIdQuery()
-                ->filterByPrimaryKeys($amigo->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByAmigoRelatedById() only accepts arguments of type \Amigo or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the AmigoRelatedById relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $foto The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildAmigoQuery The current query, for fluid interface
      */
-    public function joinAmigoRelatedById($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function filterByFoto($foto = null, $comparison = null)
     {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('AmigoRelatedById');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
+        if (null === $comparison) {
+            if (is_array($foto)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $foto)) {
+                $foto = str_replace('*', '%', $foto);
+                $comparison = Criteria::LIKE;
+            }
         }
 
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'AmigoRelatedById');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the AmigoRelatedById relation Amigo object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \AmigoQuery A secondary query class using the current class as primary query
-     */
-    public function useAmigoRelatedByIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinAmigoRelatedById($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'AmigoRelatedById', '\AmigoQuery');
-    }
-
-    /**
-     * Filter the query by a related \Presente object
-     *
-     * @param \Presente|ObjectCollection $presente  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildAmigoQuery The current query, for fluid interface
-     */
-    public function filterByPresente($presente, $comparison = null)
-    {
-        if ($presente instanceof \Presente) {
-            return $this
-                ->addUsingAlias(AmigoTableMap::COL_ID, $presente->getIdUsuario(), $comparison);
-        } elseif ($presente instanceof ObjectCollection) {
-            return $this
-                ->usePresenteQuery()
-                ->filterByPrimaryKeys($presente->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByPresente() only accepts arguments of type \Presente or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Presente relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildAmigoQuery The current query, for fluid interface
-     */
-    public function joinPresente($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Presente');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Presente');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Presente relation Presente object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \PresenteQuery A secondary query class using the current class as primary query
-     */
-    public function usePresenteQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinPresente($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Presente', '\PresenteQuery');
+        return $this->addUsingAlias(AmigoTableMap::COL_FOTO, $foto, $comparison);
     }
 
     /**
