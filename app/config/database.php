@@ -66,9 +66,9 @@ return array(
 		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
-			'database' => 'oimovel',
-			'username' => 'oimovel',
-			'password' => 'oimovel',
+			'database' => 'amigosecreto',
+			'username' => 'amigosecreto',
+			'password' => 'amigosecreto',
 			'charset'  => 'utf8',
 			'prefix'   => '',
 			'schema'   => 'public',

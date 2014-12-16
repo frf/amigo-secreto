@@ -27,30 +27,31 @@
   <body>
       <div role="main" class="container theme-showcase">
     <div class="jumbotron">
-        <h1><?php echo $amigo->getNome(); ?></h1>
-        <h2><?php echo $amigo->getMensagem(); ?></h2>
+        <h1 style="text-align: center"><?php echo $amigo->getNome(); ?></h1>
+        <h2 style="text-align: center"><?php echo $amigo->getMensagem(); ?> <a href="/cadastrarmensagem/<?php echo $amigo->getId(); ?>" class="btn btn-sm btn-primary" type="button">Editar Mensagem</a></h2>
         <div class="row">
               <div class="thumbnail">
-                  <?php if($amigo->getFoto() == ""){ ?>
-                        <img src="/images/" alt="<?php echo $amigo->getNome(); ?>">
-                  <?php } else { ?>
-                        <img src="/images/<?php echo $amigo->getFoto(); ?>.jpg" alt="">
-                  <?php }  ?>
-                        <br>
-                        <br>
-                        
+                        <img src="/images/<?php echo $amigo->getFoto(); ?>.jpg" >
                          <ul class="list-group">
-                        <?php if($presentes){ foreach($presentes as $p){ ?>
+                        <?php if(count($presentes)){ foreach($presentes as $p){ ?>
                              <li class="list-group-item" style="text-align: center;font-size: 18px">
                                  <b><?php echo $p->getProduto(); ?></b>
+                                 <a href="/excluirpresente/<?php echo $p->getId(); ?>" style="float: right" class="btn btn-sm btn-danger" type="button">Excluir</a>
                         </li>
-                        <?php } } ?>
+                        <?php } }else{ ?>
+                        <br>
+                        <li class="list-group-item" style="text-align: center;font-size: 18px;color:red">
+                                 <b>Nenhum presente cadastrado. Veja mais tarde.</b>
+                        </li>
+                        <?php } ?>
                     </ul>
               </div>
                 <div style="text-align: center">
-                    <button class="btn btn-md btn-success" type="button" onclick="sortear(<?php echo $amigo->getId(); ?>,'<?php echo $amigo->getNome(); ?>')">Sortear Amigo Oculto</button>
+                    <?php if($amigo->getIdSorteado() == ""){ ?>
+                    <a href="/sorteio/<?php echo $amigo->getId(); ?>" class="btn btn-md btn-success" type="button" >Eu sou <?php echo $amigo->getNome(); ?> e quero sortear meu amigo oculto</a>
                     <br>
                     <br>
+                    <?php } ?>
                     <a href="/cadastrarpresente/<?php echo $amigo->getId(); ?>" class="btn btn-md btn-primary" type="button">Cadastrar Presente</a>
                     <br>
                     <br>      

@@ -21,20 +21,10 @@
   <body>
       <div role="main" class="container theme-showcase">
     <div class="jumbotron">
-        <h1><?php echo $amigo->getNome(); ?></h1>
-        <h3>Cadastro de Presente, lembrando que o valor do presente é de R$ 30 a R$ 50</h3>
-        <br>
-        <div class="row">
-            <form action="/salvarpresente" method="post" role="form">
-                <input name="idamigo" type="hidden" class="form-control" value="<?php echo $amigo->getId(); ?>">
-                    <div class="form-group">
-                        <label style="color:red" for="exampleInputPassword1">Presente que você quer?</label>
-                        <input name="produto" type="text" class="form-control" placeholder="Havaiana,Boné,Camisa">
-                    </div>
-                    <button class="btn btn-md btn-primary" type="submit">Salvar</button>                   
-                    <a href="/" class="btn btn-md btn-info" type="button">Voltar</a>                   
-                <br>
-            </form>
+        <div class="row" style="color:red; font-size: 18px;text-align: center">
+            <b>Seu amigo oculto já foi revelado para você nao adianta tentar trocar :)</b><br>
+            <br>
+            <a href="/" class="btn btn-md btn-primary" type="button">Voltar</a>
         </div>
         
     </div>

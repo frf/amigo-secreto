@@ -22,14 +22,14 @@
       <div role="main" class="container theme-showcase">
     <div class="jumbotron">
         <h1><?php echo $amigo->getNome(); ?></h1>
-        <h3>Cadastro de Presente, lembrando que o valor do presente é de R$ 30 a R$ 50</h3>
+        <h3>Cadastro de mensagem de natal.</h3>
         <br>
         <div class="row">
-            <form action="/salvarpresente" method="post" role="form">
+            <form action="/salvarmensagem" method="post" role="form">
                 <input name="idamigo" type="hidden" class="form-control" value="<?php echo $amigo->getId(); ?>">
                     <div class="form-group">
-                        <label style="color:red" for="exampleInputPassword1">Presente que você quer?</label>
-                        <input name="produto" type="text" class="form-control" placeholder="Havaiana,Boné,Camisa">
+                        <label style="color:red" for="exampleInputPassword1">Mensagem</label>
+                        <textarea name="mensagem" type="text" class="form-control"><?php echo $amigo->getMensagem(); ?></textarea>
                     </div>
                     <button class="btn btn-md btn-primary" type="submit">Salvar</button>                   
                     <a href="/" class="btn btn-md btn-info" type="button">Voltar</a>                   

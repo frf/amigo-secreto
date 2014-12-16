@@ -21,18 +21,19 @@
   <body>
       <div role="main" class="container theme-showcase">
     <div class="jumbotron">
-        <h1><?php echo $amigo->getNome(); ?></h1>
-        <h3>Cadastro de Presente, lembrando que o valor do presente é de R$ 30 a R$ 50</h3>
-        <br>
-        <div class="row">
-            <form action="/salvarpresente" method="post" role="form">
+        <h1 style="text-align: center"><?php echo $amigo->getNome(); ?></h1>
+        
+        <div class="row" style="color:red; font-size: 18px;text-align: center">
+            <b>Este é você mesmo ? Atenção somente clique em sortear se você for esta pessoa da foto !</b><br>
+            <br>
+            <img src="/images/<?php echo $amigo->getFoto(); ?>.jpg" alt="">
+            <form action="/sortear" method="post" role="form">
                 <input name="idamigo" type="hidden" class="form-control" value="<?php echo $amigo->getId(); ?>">
                     <div class="form-group">
-                        <label style="color:red" for="exampleInputPassword1">Presente que você quer?</label>
-                        <input name="produto" type="text" class="form-control" placeholder="Havaiana,Boné,Camisa">
+                        <label style="color:red" for="exampleInputPassword1">!!! Clique agora e descubra quem será seu amigo oculto !!!!</label>
                     </div>
-                    <button class="btn btn-md btn-primary" type="submit">Salvar</button>                   
-                    <a href="/" class="btn btn-md btn-info" type="button">Voltar</a>                   
+                    <button class="btn btn-md btn-danger" type="submit">Eu sou <?php echo $amigo->getNome(); ?> e quero sortear meu amigo oculto</button>                   
+                    <a href="/perfil/<?php echo $amigo->getId(); ?>" class="btn btn-md btn-info" type="button">Voltar</a>             
                 <br>
             </form>
         </div>
