@@ -59,7 +59,7 @@ class AmigoTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class AmigoTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /**
      * the column name for the id field
@@ -97,6 +97,11 @@ class AmigoTableMap extends TableMap
     const COL_FOTO = 'amigo.foto';
 
     /**
+     * the column name for the mensagem field
+     */
+    const COL_MENSAGEM = 'amigo.mensagem';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -108,11 +113,11 @@ class AmigoTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Nome', 'IdSorteado', 'DtSorteio', 'Foto', ),
-        self::TYPE_CAMELNAME     => array('id', 'nome', 'idSorteado', 'dtSorteio', 'foto', ),
-        self::TYPE_COLNAME       => array(AmigoTableMap::COL_ID, AmigoTableMap::COL_NOME, AmigoTableMap::COL_ID_SORTEADO, AmigoTableMap::COL_DT_SORTEIO, AmigoTableMap::COL_FOTO, ),
-        self::TYPE_FIELDNAME     => array('id', 'nome', 'id_sorteado', 'dt_sorteio', 'foto', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id', 'Nome', 'IdSorteado', 'DtSorteio', 'Foto', 'Mensagem', ),
+        self::TYPE_CAMELNAME     => array('id', 'nome', 'idSorteado', 'dtSorteio', 'foto', 'mensagem', ),
+        self::TYPE_COLNAME       => array(AmigoTableMap::COL_ID, AmigoTableMap::COL_NOME, AmigoTableMap::COL_ID_SORTEADO, AmigoTableMap::COL_DT_SORTEIO, AmigoTableMap::COL_FOTO, AmigoTableMap::COL_MENSAGEM, ),
+        self::TYPE_FIELDNAME     => array('id', 'nome', 'id_sorteado', 'dt_sorteio', 'foto', 'mensagem', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -122,11 +127,11 @@ class AmigoTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Nome' => 1, 'IdSorteado' => 2, 'DtSorteio' => 3, 'Foto' => 4, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'nome' => 1, 'idSorteado' => 2, 'dtSorteio' => 3, 'foto' => 4, ),
-        self::TYPE_COLNAME       => array(AmigoTableMap::COL_ID => 0, AmigoTableMap::COL_NOME => 1, AmigoTableMap::COL_ID_SORTEADO => 2, AmigoTableMap::COL_DT_SORTEIO => 3, AmigoTableMap::COL_FOTO => 4, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'nome' => 1, 'id_sorteado' => 2, 'dt_sorteio' => 3, 'foto' => 4, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Nome' => 1, 'IdSorteado' => 2, 'DtSorteio' => 3, 'Foto' => 4, 'Mensagem' => 5, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'nome' => 1, 'idSorteado' => 2, 'dtSorteio' => 3, 'foto' => 4, 'mensagem' => 5, ),
+        self::TYPE_COLNAME       => array(AmigoTableMap::COL_ID => 0, AmigoTableMap::COL_NOME => 1, AmigoTableMap::COL_ID_SORTEADO => 2, AmigoTableMap::COL_DT_SORTEIO => 3, AmigoTableMap::COL_FOTO => 4, AmigoTableMap::COL_MENSAGEM => 5, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'nome' => 1, 'id_sorteado' => 2, 'dt_sorteio' => 3, 'foto' => 4, 'mensagem' => 5, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -152,6 +157,7 @@ class AmigoTableMap extends TableMap
         $this->addColumn('id_sorteado', 'IdSorteado', 'INTEGER', false, null, null);
         $this->addColumn('dt_sorteio', 'DtSorteio', 'TIMESTAMP', false, null, null);
         $this->addColumn('foto', 'Foto', 'VARCHAR', false, 200, null);
+        $this->addColumn('mensagem', 'Mensagem', 'LONGVARCHAR', false, null, null);
     } // initialize()
 
     /**
@@ -307,12 +313,14 @@ class AmigoTableMap extends TableMap
             $criteria->addSelectColumn(AmigoTableMap::COL_ID_SORTEADO);
             $criteria->addSelectColumn(AmigoTableMap::COL_DT_SORTEIO);
             $criteria->addSelectColumn(AmigoTableMap::COL_FOTO);
+            $criteria->addSelectColumn(AmigoTableMap::COL_MENSAGEM);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.nome');
             $criteria->addSelectColumn($alias . '.id_sorteado');
             $criteria->addSelectColumn($alias . '.dt_sorteio');
             $criteria->addSelectColumn($alias . '.foto');
+            $criteria->addSelectColumn($alias . '.mensagem');
         }
     }
 

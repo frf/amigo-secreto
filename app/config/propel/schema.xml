@@ -6,10 +6,14 @@
     <column name="id_sorteado" phpName="IdSorteado" type="INTEGER"/>
     <column name="dt_sorteio" phpName="DtSorteio" type="TIMESTAMP"/>
     <column name="foto" phpName="Foto" type="VARCHAR" size="200"/>
+    <column name="mensagem" phpName="Mensagem" type="LONGVARCHAR"/>
   </table>
   <table name="presente" idMethod="native" phpName="Presente">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="produto" phpName="Produto" type="VARCHAR" size="250"/>
+    <column name="idamigo" phpName="Idamigo" type="INTEGER"/>
     <index name="fki_pk_amigo_presente">
-      <index-column name=""/>
+      <index-column name="idamigo"/>
     </index>
   </table>
 </database>

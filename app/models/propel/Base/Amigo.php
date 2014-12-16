@@ -92,6 +92,12 @@ abstract class Amigo implements ActiveRecordInterface
     protected $foto;
 
     /**
+     * The value for the mensagem field.
+     * @var        string
+     */
+    protected $mensagem;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -377,6 +383,16 @@ abstract class Amigo implements ActiveRecordInterface
     }
 
     /**
+     * Get the [mensagem] column value.
+     *
+     * @return string
+     */
+    public function getMensagem()
+    {
+        return $this->mensagem;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param  int $v new value
@@ -477,6 +493,26 @@ abstract class Amigo implements ActiveRecordInterface
     } // setFoto()
 
     /**
+     * Set the value of [mensagem] column.
+     *
+     * @param  string $v new value
+     * @return $this|\Amigo The current object (for fluent API support)
+     */
+    public function setMensagem($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->mensagem !== $v) {
+            $this->mensagem = $v;
+            $this->modifiedColumns[AmigoTableMap::COL_MENSAGEM] = true;
+        }
+
+        return $this;
+    } // setMensagem()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -526,6 +562,9 @@ abstract class Amigo implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AmigoTableMap::translateFieldName('Foto', TableMap::TYPE_PHPNAME, $indexType)];
             $this->foto = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AmigoTableMap::translateFieldName('Mensagem', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->mensagem = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -534,7 +573,7 @@ abstract class Amigo implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = AmigoTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = AmigoTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Amigo'), 0, $e);
@@ -755,6 +794,9 @@ abstract class Amigo implements ActiveRecordInterface
         if ($this->isColumnModified(AmigoTableMap::COL_FOTO)) {
             $modifiedColumns[':p' . $index++]  = 'foto';
         }
+        if ($this->isColumnModified(AmigoTableMap::COL_MENSAGEM)) {
+            $modifiedColumns[':p' . $index++]  = 'mensagem';
+        }
 
         $sql = sprintf(
             'INSERT INTO amigo (%s) VALUES (%s)',
@@ -780,6 +822,9 @@ abstract class Amigo implements ActiveRecordInterface
                         break;
                     case 'foto':
                         $stmt->bindValue($identifier, $this->foto, PDO::PARAM_STR);
+                        break;
+                    case 'mensagem':
+                        $stmt->bindValue($identifier, $this->mensagem, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -851,6 +896,9 @@ abstract class Amigo implements ActiveRecordInterface
             case 4:
                 return $this->getFoto();
                 break;
+            case 5:
+                return $this->getMensagem();
+                break;
             default:
                 return null;
                 break;
@@ -885,6 +933,7 @@ abstract class Amigo implements ActiveRecordInterface
             $keys[2] => $this->getIdSorteado(),
             $keys[3] => $this->getDtSorteio(),
             $keys[4] => $this->getFoto(),
+            $keys[5] => $this->getMensagem(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -939,6 +988,9 @@ abstract class Amigo implements ActiveRecordInterface
             case 4:
                 $this->setFoto($value);
                 break;
+            case 5:
+                $this->setMensagem($value);
+                break;
         } // switch()
 
         return $this;
@@ -979,6 +1031,9 @@ abstract class Amigo implements ActiveRecordInterface
         }
         if (array_key_exists($keys[4], $arr)) {
             $this->setFoto($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setMensagem($arr[$keys[5]]);
         }
     }
 
@@ -1035,6 +1090,9 @@ abstract class Amigo implements ActiveRecordInterface
         }
         if ($this->isColumnModified(AmigoTableMap::COL_FOTO)) {
             $criteria->add(AmigoTableMap::COL_FOTO, $this->foto);
+        }
+        if ($this->isColumnModified(AmigoTableMap::COL_MENSAGEM)) {
+            $criteria->add(AmigoTableMap::COL_MENSAGEM, $this->mensagem);
         }
 
         return $criteria;
@@ -1126,6 +1184,7 @@ abstract class Amigo implements ActiveRecordInterface
         $copyObj->setIdSorteado($this->getIdSorteado());
         $copyObj->setDtSorteio($this->getDtSorteio());
         $copyObj->setFoto($this->getFoto());
+        $copyObj->setMensagem($this->getMensagem());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1166,6 +1225,7 @@ abstract class Amigo implements ActiveRecordInterface
         $this->id_sorteado = null;
         $this->dt_sorteio = null;
         $this->foto = null;
+        $this->mensagem = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

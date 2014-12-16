@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap 101 Template</title>
+    <title>Amigo Oculto Familhão</title>
 
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
@@ -25,31 +25,41 @@
     </script>
   </head>
   <body>
-    <div role="main" class="container theme-showcase">
-        <div class="jumbotron" style="text-align:center; ">
-        <h1>Amigo Oculto</h1>
-        <p>Clique abaixo na <b style="text-transform: uppercase">sua foto</b> para sortear seu amigo oculto. Somos <?php echo count($amigos); ?> participantes.</p>
-    </div>
-          
-          
-          
-         
-          <div class="row">
-            <?php foreach($amigos as $amigo){ ?>
-            <div class="col-xs-6">
-            <a href="/perfil/<?php echo $amigo->getId(); ?>" class="thumbnail">
-                <?php echo $amigo->getNome(); ?>
+      <div role="main" class="container theme-showcase">
+    <div class="jumbotron">
+        <h1><?php echo $amigo->getNome(); ?></h1>
+        <h2><?php echo $amigo->getMensagem(); ?></h2>
+        <div class="row">
+              <div class="thumbnail">
                   <?php if($amigo->getFoto() == ""){ ?>
                         <img src="/images/" alt="<?php echo $amigo->getNome(); ?>">
                   <?php } else { ?>
                         <img src="/images/<?php echo $amigo->getFoto(); ?>.jpg" alt="">
                   <?php }  ?>
-              </a>               
-            </div>       
-            <?php } ?>  
-          </div>        
-           
-         
+                        <br>
+                        <br>
+                        
+                         <ul class="list-group">
+                        <?php if($presentes){ foreach($presentes as $p){ ?>
+                             <li class="list-group-item" style="text-align: center;font-size: 18px">
+                                 <b><?php echo $p->getProduto(); ?></b>
+                        </li>
+                        <?php } } ?>
+                    </ul>
+              </div>
+                <div style="text-align: center">
+                    <button class="btn btn-md btn-success" type="button" onclick="sortear(<?php echo $amigo->getId(); ?>,'<?php echo $amigo->getNome(); ?>')">Sortear Amigo Oculto</button>
+                    <br>
+                    <br>
+                    <a href="/cadastrarpresente/<?php echo $amigo->getId(); ?>" class="btn btn-md btn-primary" type="button">Cadastrar Presente</a>
+                    <br>
+                    <br>      
+                   <a href="/" class="btn btn-sm btn-info" type="button">Voltar</a>
+                </div>
+                <br>
+        </div>
+        
+    </div>
           
           
     </div>

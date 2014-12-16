@@ -4,6 +4,7 @@ namespace Base;
 
 use \PresenteQuery as ChildPresenteQuery;
 use \Exception;
+use \PDO;
 use Map\PresenteTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -57,6 +58,24 @@ abstract class Presente implements ActiveRecordInterface
      * @var array
      */
     protected $virtualColumns = array();
+
+    /**
+     * The value for the id field.
+     * @var        int
+     */
+    protected $id;
+
+    /**
+     * The value for the produto field.
+     * @var        string
+     */
+    protected $produto;
+
+    /**
+     * The value for the idamigo field.
+     * @var        int
+     */
+    protected $idamigo;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -284,6 +303,96 @@ abstract class Presente implements ActiveRecordInterface
     }
 
     /**
+     * Get the [id] column value.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get the [produto] column value.
+     *
+     * @return string
+     */
+    public function getProduto()
+    {
+        return $this->produto;
+    }
+
+    /**
+     * Get the [idamigo] column value.
+     *
+     * @return int
+     */
+    public function getIdamigo()
+    {
+        return $this->idamigo;
+    }
+
+    /**
+     * Set the value of [id] column.
+     *
+     * @param  int $v new value
+     * @return $this|\Presente The current object (for fluent API support)
+     */
+    public function setId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[PresenteTableMap::COL_ID] = true;
+        }
+
+        return $this;
+    } // setId()
+
+    /**
+     * Set the value of [produto] column.
+     *
+     * @param  string $v new value
+     * @return $this|\Presente The current object (for fluent API support)
+     */
+    public function setProduto($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->produto !== $v) {
+            $this->produto = $v;
+            $this->modifiedColumns[PresenteTableMap::COL_PRODUTO] = true;
+        }
+
+        return $this;
+    } // setProduto()
+
+    /**
+     * Set the value of [idamigo] column.
+     *
+     * @param  int $v new value
+     * @return $this|\Presente The current object (for fluent API support)
+     */
+    public function setIdamigo($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->idamigo !== $v) {
+            $this->idamigo = $v;
+            $this->modifiedColumns[PresenteTableMap::COL_IDAMIGO] = true;
+        }
+
+        return $this;
+    } // setIdamigo()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -318,6 +427,15 @@ abstract class Presente implements ActiveRecordInterface
     public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
     {
         try {
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PresenteTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PresenteTableMap::translateFieldName('Produto', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->produto = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PresenteTableMap::translateFieldName('Idamigo', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->idamigo = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -326,7 +444,7 @@ abstract class Presente implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 0; // 0 = PresenteTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = PresenteTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Presente'), 0, $e);
@@ -517,8 +635,30 @@ abstract class Presente implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
+        $this->modifiedColumns[PresenteTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . PresenteTableMap::COL_ID . ')');
+        }
+        if (null === $this->id) {
+            try {
+                $dataFetcher = $con->query("SELECT nextval('presente_id_seq')");
+                $this->id = $dataFetcher->fetchColumn();
+            } catch (Exception $e) {
+                throw new PropelException('Unable to get sequence id.', 0, $e);
+            }
+        }
+
 
          // check the columns in natural order for more readable SQL queries
+        if ($this->isColumnModified(PresenteTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
+        }
+        if ($this->isColumnModified(PresenteTableMap::COL_PRODUTO)) {
+            $modifiedColumns[':p' . $index++]  = 'produto';
+        }
+        if ($this->isColumnModified(PresenteTableMap::COL_IDAMIGO)) {
+            $modifiedColumns[':p' . $index++]  = 'idamigo';
+        }
 
         $sql = sprintf(
             'INSERT INTO presente (%s) VALUES (%s)',
@@ -530,6 +670,15 @@ abstract class Presente implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
+                    case 'id':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case 'produto':
+                        $stmt->bindValue($identifier, $this->produto, PDO::PARAM_STR);
+                        break;
+                    case 'idamigo':
+                        $stmt->bindValue($identifier, $this->idamigo, PDO::PARAM_INT);
+                        break;
                 }
             }
             $stmt->execute();
@@ -585,6 +734,15 @@ abstract class Presente implements ActiveRecordInterface
     public function getByPosition($pos)
     {
         switch ($pos) {
+            case 0:
+                return $this->getId();
+                break;
+            case 1:
+                return $this->getProduto();
+                break;
+            case 2:
+                return $this->getIdamigo();
+                break;
             default:
                 return null;
                 break;
@@ -614,6 +772,9 @@ abstract class Presente implements ActiveRecordInterface
         $alreadyDumpedObjects['Presente'][$this->hashCode()] = true;
         $keys = PresenteTableMap::getFieldNames($keyType);
         $result = array(
+            $keys[0] => $this->getId(),
+            $keys[1] => $this->getProduto(),
+            $keys[2] => $this->getIdamigo(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -653,6 +814,15 @@ abstract class Presente implements ActiveRecordInterface
     public function setByPosition($pos, $value)
     {
         switch ($pos) {
+            case 0:
+                $this->setId($value);
+                break;
+            case 1:
+                $this->setProduto($value);
+                break;
+            case 2:
+                $this->setIdamigo($value);
+                break;
         } // switch()
 
         return $this;
@@ -679,6 +849,15 @@ abstract class Presente implements ActiveRecordInterface
     {
         $keys = PresenteTableMap::getFieldNames($keyType);
 
+        if (array_key_exists($keys[0], $arr)) {
+            $this->setId($arr[$keys[0]]);
+        }
+        if (array_key_exists($keys[1], $arr)) {
+            $this->setProduto($arr[$keys[1]]);
+        }
+        if (array_key_exists($keys[2], $arr)) {
+            $this->setIdamigo($arr[$keys[2]]);
+        }
     }
 
      /**
@@ -720,6 +899,15 @@ abstract class Presente implements ActiveRecordInterface
     {
         $criteria = new Criteria(PresenteTableMap::DATABASE_NAME);
 
+        if ($this->isColumnModified(PresenteTableMap::COL_ID)) {
+            $criteria->add(PresenteTableMap::COL_ID, $this->id);
+        }
+        if ($this->isColumnModified(PresenteTableMap::COL_PRODUTO)) {
+            $criteria->add(PresenteTableMap::COL_PRODUTO, $this->produto);
+        }
+        if ($this->isColumnModified(PresenteTableMap::COL_IDAMIGO)) {
+            $criteria->add(PresenteTableMap::COL_IDAMIGO, $this->idamigo);
+        }
 
         return $criteria;
     }
@@ -736,7 +924,8 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        throw new LogicException('The Presente object has no primary key');
+        $criteria = ChildPresenteQuery::create();
+        $criteria->add(PresenteTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -749,7 +938,7 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = false;
+        $validPk = null !== $this->getId();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -764,27 +953,23 @@ abstract class Presente implements ActiveRecordInterface
     }
 
     /**
-     * Returns NULL since this table doesn't have a primary key.
-     * This method exists only for BC and is deprecated!
-     * @return null
+     * Returns the primary key for this object (row).
+     * @return int
      */
     public function getPrimaryKey()
     {
-        return null;
+        return $this->getId();
     }
 
     /**
-     * Dummy primary key setter.
+     * Generic method to set the primary key (id column).
      *
-     * This function only exists to preserve backwards compatibility.  It is no longer
-     * needed or required by the Persistent interface.  It will be removed in next BC-breaking
-     * release of Propel.
-     *
-     * @deprecated
+     * @param       int $key Primary key.
+     * @return void
      */
-    public function setPrimaryKey($pk)
+    public function setPrimaryKey($key)
     {
-        // do nothing, because this object doesn't have any primary keys
+        $this->setId($key);
     }
 
     /**
@@ -793,7 +978,7 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return ;
+        return null === $this->getId();
     }
 
     /**
@@ -809,8 +994,11 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setProduto($this->getProduto());
+        $copyObj->setIdamigo($this->getIdamigo());
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -843,6 +1031,9 @@ abstract class Presente implements ActiveRecordInterface
      */
     public function clear()
     {
+        $this->id = null;
+        $this->produto = null;
+        $this->idamigo = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

@@ -11,3 +11,5 @@
 |
 */
 Route::get('/', 'HomeController@showWelcome');
+Route::get('/perfil/{id}', 'HomeController@showPerfil');
+Route::get('/cadastrarpresente/{id}', 'HomeController@showCadastroPresente');

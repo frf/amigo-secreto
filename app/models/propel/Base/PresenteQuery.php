@@ -5,13 +5,13 @@ namespace Base;
 use \Presente as ChildPresente;
 use \PresenteQuery as ChildPresenteQuery;
 use \Exception;
+use \PDO;
 use Map\PresenteTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
-use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 
 /**
@@ -19,7 +19,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
+ * @method     ChildPresenteQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildPresenteQuery orderByProduto($order = Criteria::ASC) Order by the produto column
+ * @method     ChildPresenteQuery orderByIdamigo($order = Criteria::ASC) Order by the idamigo column
  *
+ * @method     ChildPresenteQuery groupById() Group by the id column
+ * @method     ChildPresenteQuery groupByProduto() Group by the produto column
+ * @method     ChildPresenteQuery groupByIdamigo() Group by the idamigo column
  *
  * @method     ChildPresenteQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPresenteQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -28,8 +34,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPresente findOne(ConnectionInterface $con = null) Return the first ChildPresente matching the query
  * @method     ChildPresente findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPresente matching the query, or a new ChildPresente object populated from the query conditions when no match is found
  *
+ * @method     ChildPresente findOneById(int $id) Return the first ChildPresente filtered by the id column
+ * @method     ChildPresente findOneByProduto(string $produto) Return the first ChildPresente filtered by the produto column
+ * @method     ChildPresente findOneByIdamigo(int $idamigo) Return the first ChildPresente filtered by the idamigo column
  *
  * @method     ChildPresente[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPresente objects based on current ModelCriteria
+ * @method     ChildPresente[]|ObjectCollection findById(int $id) Return ChildPresente objects filtered by the id column
+ * @method     ChildPresente[]|ObjectCollection findByProduto(string $produto) Return ChildPresente objects filtered by the produto column
+ * @method     ChildPresente[]|ObjectCollection findByIdamigo(int $idamigo) Return ChildPresente objects filtered by the idamigo column
  * @method     ChildPresente[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -88,13 +100,83 @@ abstract class PresenteQuery extends ModelCriteria
      */
     public function findPk($key, ConnectionInterface $con = null)
     {
-        throw new LogicException('The Presente object has no primary key');
+        if ($key === null) {
+            return null;
+        }
+        if ((null !== ($obj = PresenteTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
+            // the object is already in the instance pool
+            return $obj;
+        }
+        if ($con === null) {
+            $con = Propel::getServiceContainer()->getReadConnection(PresenteTableMap::DATABASE_NAME);
+        }
+        $this->basePreSelect($con);
+        if ($this->formatter || $this->modelAlias || $this->with || $this->select
+         || $this->selectColumns || $this->asColumns || $this->selectModifiers
+         || $this->map || $this->having || $this->joins) {
+            return $this->findPkComplex($key, $con);
+        } else {
+            return $this->findPkSimple($key, $con);
+        }
+    }
+
+    /**
+     * Find object by primary key using raw SQL to go fast.
+     * Bypass doSelect() and the object formatter by using generated code.
+     *
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPresente A model object, or null if the key is not found
+     */
+    protected function findPkSimple($key, ConnectionInterface $con)
+    {
+        $sql = 'SELECT id, produto, idamigo FROM presente WHERE id = :p0';
+        try {
+            $stmt = $con->prepare($sql);
+            $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
+            $stmt->execute();
+        } catch (Exception $e) {
+            Propel::log($e->getMessage(), Propel::LOG_ERR);
+            throw new PropelException(sprintf('Unable to execute SELECT statement [%s]', $sql), 0, $e);
+        }
+        $obj = null;
+        if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+            /** @var ChildPresente $obj */
+            $obj = new ChildPresente();
+            $obj->hydrate($row);
+            PresenteTableMap::addInstanceToPool($obj, (string) $key);
+        }
+        $stmt->closeCursor();
+
+        return $obj;
+    }
+
+    /**
+     * Find object by primary key.
+     *
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
+     *
+     * @return ChildPresente|array|mixed the result, formatted by the current formatter
+     */
+    protected function findPkComplex($key, ConnectionInterface $con)
+    {
+        // As the query uses a PK condition, no limit(1) is necessary.
+        $criteria = $this->isKeepQuery() ? clone $this : $this;
+        $dataFetcher = $criteria
+            ->filterByPrimaryKey($key)
+            ->doSelect($con);
+
+        return $criteria->getFormatter()->init($criteria)->formatOne($dataFetcher);
     }
 
     /**
      * Find objects by primary key
      * <code>
-     * $objs = $c->findPks(array(array(12, 56), array(832, 123), array(123, 456)), $con);
+     * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
      * @param     array $keys Primary keys to use for the query
      * @param     ConnectionInterface $con an optional connection object
@@ -103,7 +185,16 @@ abstract class PresenteQuery extends ModelCriteria
      */
     public function findPks($keys, ConnectionInterface $con = null)
     {
-        throw new LogicException('The Presente object has no primary key');
+        if (null === $con) {
+            $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
+        }
+        $this->basePreSelect($con);
+        $criteria = $this->isKeepQuery() ? clone $this : $this;
+        $dataFetcher = $criteria
+            ->filterByPrimaryKeys($keys)
+            ->doSelect($con);
+
+        return $criteria->getFormatter()->init($criteria)->format($dataFetcher);
     }
 
     /**
@@ -115,7 +206,8 @@ abstract class PresenteQuery extends ModelCriteria
      */
     public function filterByPrimaryKey($key)
     {
-        throw new LogicException('The Presente object has no primary key');
+
+        return $this->addUsingAlias(PresenteTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -127,7 +219,119 @@ abstract class PresenteQuery extends ModelCriteria
      */
     public function filterByPrimaryKeys($keys)
     {
-        throw new LogicException('The Presente object has no primary key');
+
+        return $this->addUsingAlias(PresenteTableMap::COL_ID, $keys, Criteria::IN);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPresenteQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(PresenteTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(PresenteTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PresenteTableMap::COL_ID, $id, $comparison);
+    }
+
+    /**
+     * Filter the query on the produto column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByProduto('fooValue');   // WHERE produto = 'fooValue'
+     * $query->filterByProduto('%fooValue%'); // WHERE produto LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $produto The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPresenteQuery The current query, for fluid interface
+     */
+    public function filterByProduto($produto = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($produto)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $produto)) {
+                $produto = str_replace('*', '%', $produto);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PresenteTableMap::COL_PRODUTO, $produto, $comparison);
+    }
+
+    /**
+     * Filter the query on the idamigo column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIdamigo(1234); // WHERE idamigo = 1234
+     * $query->filterByIdamigo(array(12, 34)); // WHERE idamigo IN (12, 34)
+     * $query->filterByIdamigo(array('min' => 12)); // WHERE idamigo > 12
+     * </code>
+     *
+     * @param     mixed $idamigo The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPresenteQuery The current query, for fluid interface
+     */
+    public function filterByIdamigo($idamigo = null, $comparison = null)
+    {
+        if (is_array($idamigo)) {
+            $useMinMax = false;
+            if (isset($idamigo['min'])) {
+                $this->addUsingAlias(PresenteTableMap::COL_IDAMIGO, $idamigo['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($idamigo['max'])) {
+                $this->addUsingAlias(PresenteTableMap::COL_IDAMIGO, $idamigo['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PresenteTableMap::COL_IDAMIGO, $idamigo, $comparison);
     }
 
     /**
@@ -140,8 +344,7 @@ abstract class PresenteQuery extends ModelCriteria
     public function prune($presente = null)
     {
         if ($presente) {
-            throw new LogicException('Presente object has no primary key');
-
+            $this->addUsingAlias(PresenteTableMap::COL_ID, $presente->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

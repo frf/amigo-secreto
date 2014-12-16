@@ -17,7 +17,17 @@ class HomeController extends BaseController {
 
 	public function showWelcome()
 	{
-		return View::make('hello',array('amigos' => Base\AmigoQuery::create()->find()));
+		return View::make('hello',array('amigos' => Base\AmigoQuery::create()->orderByNome()->find()));
+	}
+	public function showPerfil($id)
+	{
+		return View::make('perfil',array('amigo' => Base\AmigoQuery::create()->findOneById($id),
+                                                'presentes'=>  Base\PresenteQuery::create()->findBy("IdAmigo", $id)));
+	}
+	public function showCadastroPresente($id)
+	{
+		return View::make('cadastropresente',array('amigo' => Base\AmigoQuery::create()->findOneById($id),
+                                                'presentes'=>  Base\PresenteQuery::create()->findBy("IdAmigo", $id)));
 	}
 
 }

@@ -24,12 +24,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAmigoQuery orderByIdSorteado($order = Criteria::ASC) Order by the id_sorteado column
  * @method     ChildAmigoQuery orderByDtSorteio($order = Criteria::ASC) Order by the dt_sorteio column
  * @method     ChildAmigoQuery orderByFoto($order = Criteria::ASC) Order by the foto column
+ * @method     ChildAmigoQuery orderByMensagem($order = Criteria::ASC) Order by the mensagem column
  *
  * @method     ChildAmigoQuery groupById() Group by the id column
  * @method     ChildAmigoQuery groupByNome() Group by the nome column
  * @method     ChildAmigoQuery groupByIdSorteado() Group by the id_sorteado column
  * @method     ChildAmigoQuery groupByDtSorteio() Group by the dt_sorteio column
  * @method     ChildAmigoQuery groupByFoto() Group by the foto column
+ * @method     ChildAmigoQuery groupByMensagem() Group by the mensagem column
  *
  * @method     ChildAmigoQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildAmigoQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -43,6 +45,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAmigo findOneByIdSorteado(int $id_sorteado) Return the first ChildAmigo filtered by the id_sorteado column
  * @method     ChildAmigo findOneByDtSorteio(string $dt_sorteio) Return the first ChildAmigo filtered by the dt_sorteio column
  * @method     ChildAmigo findOneByFoto(string $foto) Return the first ChildAmigo filtered by the foto column
+ * @method     ChildAmigo findOneByMensagem(string $mensagem) Return the first ChildAmigo filtered by the mensagem column
  *
  * @method     ChildAmigo[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildAmigo objects based on current ModelCriteria
  * @method     ChildAmigo[]|ObjectCollection findById(int $id) Return ChildAmigo objects filtered by the id column
@@ -50,6 +53,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAmigo[]|ObjectCollection findByIdSorteado(int $id_sorteado) Return ChildAmigo objects filtered by the id_sorteado column
  * @method     ChildAmigo[]|ObjectCollection findByDtSorteio(string $dt_sorteio) Return ChildAmigo objects filtered by the dt_sorteio column
  * @method     ChildAmigo[]|ObjectCollection findByFoto(string $foto) Return ChildAmigo objects filtered by the foto column
+ * @method     ChildAmigo[]|ObjectCollection findByMensagem(string $mensagem) Return ChildAmigo objects filtered by the mensagem column
  * @method     ChildAmigo[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -141,7 +145,7 @@ abstract class AmigoQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, nome, id_sorteado, dt_sorteio, foto FROM amigo WHERE id = :p0';
+        $sql = 'SELECT id, nome, id_sorteado, dt_sorteio, foto, mensagem FROM amigo WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -412,6 +416,35 @@ abstract class AmigoQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AmigoTableMap::COL_FOTO, $foto, $comparison);
+    }
+
+    /**
+     * Filter the query on the mensagem column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMensagem('fooValue');   // WHERE mensagem = 'fooValue'
+     * $query->filterByMensagem('%fooValue%'); // WHERE mensagem LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $mensagem The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildAmigoQuery The current query, for fluid interface
+     */
+    public function filterByMensagem($mensagem = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($mensagem)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $mensagem)) {
+                $mensagem = str_replace('*', '%', $mensagem);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AmigoTableMap::COL_MENSAGEM, $mensagem, $comparison);
     }
 
     /**
