@@ -29,7 +29,7 @@
         <div class="jumbotron" style="text-align:center; ">
         <h1>Amigo Oculto</h1>
         <p>Clique abaixo na <b style="text-transform: uppercase">sua foto</b> para sortear <b style="text-transform: uppercase">o seu amigo oculto.</b> Somos <?php echo count($amigos); ?> participantes.</p><br>
-        <h3 style="color:blue"> Dia 24/12/2014 após as 20:00hs <br>Endereço: Estrada Professor Daltro Santos 445, Bloco 2 Apartamento 303. Condomínio Park Reality <br>
+        <h3 style="color:blue"> Dia 24/12/2014 após as 20:00hs <br>Endereço: Estrada Professor Daltro Santos 445, Bloco 2 Apartamento 303. <br>CEP: 23092-205 Campo Grande - RJ - RJ <br> Condomínio Park Reality <br>
             <a target="_Blank" href="https://www.google.com/maps/dir/-22.880776,-43.551232//@-22.8808939,-43.5534268,17z/data=!3m1!4b1!4m2!4m1!3e0" style="text-align:left">Exibir mapa ampliado</a></h3>
         
         
