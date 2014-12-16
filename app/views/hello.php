@@ -28,7 +28,7 @@
     <div role="main" class="container theme-showcase">
         <div class="jumbotron" style="text-align:center; ">
         <h1>Amigo Oculto</h1>
-        <p>Clique abaixo na <b style="text-transform: uppercase">sua foto</b> para sortear <b style="text-transform: uppercase">o</b> seu amigo oculto. Somos <?php echo count($amigos); ?> participantes.</p>
+        <p>Clique abaixo na <b style="text-transform: uppercase">sua foto</b> para sortear <b style="text-transform: uppercase">o seu amigo oculto.</b> Somos <?php echo count($amigos); ?> participantes.</p>
     </div>
           
           
